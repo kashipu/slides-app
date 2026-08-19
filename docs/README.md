@@ -6,6 +6,7 @@ Genera presentaciones on-brand y las exporta a **PDF**, **HTML autocontenido**, 
 
 | Doc | Qué contiene |
 |---|---|
+| [../design.md](../design.md) | **El sistema de diseño**: color, tipografía, retícula, catálogos y reglas de marca |
 | Este archivo | Arquitectura, decisiones, stack y cómo se corre |
 | [01-formato-deck.md](01-formato-deck.md) | Cómo se escribe un deck y el catálogo de layouts |
 | [02-design-system-slides.md](02-design-system-slides.md) | Canvas, retícula, escala tipográfica de slides y uso de assets |

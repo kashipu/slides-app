@@ -47,6 +47,8 @@ generado desde ese CSS con `npm run tokens`.
 
 ## Documentación
 
+- [design.md](design.md) — **el sistema de diseño**: color, tipografía, retícula, layouts, componentes, datos, logo y legales. Fuente de verdad visual del proyecto.
+
 - [docs/README.md](docs/README.md) — arquitectura, decisiones y stack
 - [docs/01-formato-deck.md](docs/01-formato-deck.md) — sintaxis del deck y catálogo de layouts
 - [docs/02-design-system-slides.md](docs/02-design-system-slides.md) — canvas, retícula, tipografía y assets
