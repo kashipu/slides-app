@@ -39,7 +39,7 @@
            display: grid; place-items: center; padding: 40px }
   .panel { display: flex; flex-direction: column; width: min(880px, 100%); height: min(640px, 100%);
            background: var(--white); border-radius: var(--r-lg); overflow: hidden;
-           box-shadow: var(--shadow-xl) }
+           box-shadow: var(--shadow) }
   .panel header { gap: 8px }
   .panel header input { flex: 1; font: 400 15px/1 var(--font-body); padding: 10px 14px;
                         border: 1px solid var(--border-default); border-radius: var(--r-pill);
@@ -166,7 +166,7 @@
 
   main { overflow: auto; padding: 24px; min-width: 0 }
   #deck { display: flex; flex-direction: column; gap: 24px; width: max-content }
-  .slide { box-shadow: var(--shadow-lg); border-radius: 2px }
+  .slide { box-shadow: var(--shadow-box); border-radius: 2px }
 
   /* Modo presentación */
   #app.presentando { grid-template-columns: 1fr }

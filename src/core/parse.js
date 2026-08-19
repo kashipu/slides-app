@@ -172,8 +172,8 @@ export function parse(md) {
   }
 
   const fuentes = meta.fuente === 'kiffo'
-    ? { display: 'Kiffo BdB', body: 'Kiffo BdB' }
-    : { display: 'Kiffo BdB', body: 'Roboto' };
+    ? { display: 'Kiffo BDB', body: 'Kiffo BDB' }
+    : { display: 'Kiffo BDB', body: 'Roboto' };
 
   return { meta, fuentes, slides, avisos };
 }

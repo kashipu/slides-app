@@ -6,7 +6,11 @@ import { parse } from '/src/core/parse.js';
 import { Slide } from '/src/ui/Deck.jsx';
 
 const q = new URLSearchParams(location.search);
-const md = await (await fetch(q.get('deck') || '/decks/plantilla.md')).text();
+// La barra inicial es obligatoria: sin ella Vite resuelve la ruta relativa a
+// /tools/figma/ y devuelve index.html por el fallback de SPA — el parser
+// entonces renderiza el código fuente como si fuera el deck, sin fallar.
+const deck = q.get('deck') || 'decks/plantilla.md';
+const md = await (await fetch(deck.startsWith('/') ? deck : `/${deck}`)).text();
 const ir = parse(md);
 const i = Math.min(Number(q.get('n') || 0), ir.slides.length - 1);
 createRoot(document.getElementById('s')).render(<Slide slide={ir.slides[i]} ir={ir} />);

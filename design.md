@@ -150,8 +150,8 @@ producto**: gráficas, badges de categoría. Nunca un CTA primario.
 | `sp-carbon-900` (premium) | `#000000` |
 
 > Corregidos según el Manual de Marca 2026. El sitio Sherpa listaba
-> `#14327D` / `#FFBE00` / `#CD3232`, que quedan reemplazados. **El código del
-> proyecto todavía tiene los valores viejos** — ver *Discrepancias*.
+> `#14327D` / `#FFBE00` / `#CD3232`, que quedan reemplazados. **Ya aplicados en
+> el código.**
 
 ### Uso en diapositivas
 
@@ -188,7 +188,9 @@ de la otra.**
 | Origen | `fuentes/kiffo-bdb/*.woff2` en sherpa-assets | Google Fonts / sistema |
 
 La familia se llama **`Kiffo BDB`**, en mayúsculas — así está en Figma y en el
-manual. El CSS del proyecto la declara como `Kiffo BdB`; ver *Discrepancias*.
+manual, y es la grafía que usa el proyecto desde que se aplicaron los
+lineamientos — CSS, IR, export HTML y Figma coinciden, sin traducción de por
+medio.
 
 Si el archivo de fuente no carga, el respaldo es **Roboto**, directo y sin
 placeholder.
@@ -479,28 +481,34 @@ que el del navegador; por eso el texto va con ancho fijo y alto automático.
 
 ---
 
-## Discrepancias con el código
+## Estado de aplicación
 
-Diferencias entre este documento y `base/colors_and_type.css`, en orden de
-impacto. Ninguna está corregida todavía.
+Las nueve diferencias que documentaba la primera versión de este archivo están
+**aplicadas**. `base/colors_and_type.css` es hoy un reflejo del manual.
 
-| Qué | En el código | Debería ser |
+| Qué | Antes | Ahora |
 |---|---|---|
-| Amarillo de marca | `#FFBE00` | **`#F9B818`** |
-| Rojo de marca | `#CD3232` | **`#EC3030`** |
-| Azul de marca | `#14327D` | **`#0043A9`** |
-| Familia display | `"Kiffo BdB"` | **`"Kiffo BDB"`** |
-| `--bg-inverse` | `midnight-800` (interactivo) | **`midnight-700`** (fondo no interactivo) |
-| Radios | `6` y `28` px | Fuera de escala → `4`/`8` y `24`/`32` |
-| Sombras | 4 tamaños inventados | 3 tokens, un solo `0 4px 12px` |
-| Easing | `cubic-bezier(0.2,0,0,1)` | **`cubic-bezier(0.2, 0.8, 0.4, 1)`** |
-| Duraciones | 150 / 240 / 400 ms | 150 / 300–400 / 500–700 ms |
+| Amarillo de marca | `#FFBE00` | `#F9B818` |
+| Rojo de marca | `#CD3232` | `#EC3030` |
+| Azul de marca | `#14327D` | `#0043A9` |
+| Familia display | `"Kiffo BdB"` | `"Kiffo BDB"` |
+| `--bg-inverse` | `midnight-800` | `midnight-700` |
+| Respaldo de `--font-body` | `Roboto, Kiffo BdB` | `Roboto, sans-serif` |
+| `--r-sm` | `6px` | `8px` |
+| `--r-xl` | `28px` | eliminado |
+| Sombras | 4 tamaños inventados | 3 tokens, `0 4px 12px` |
+| Easing | `(0.2, 0, 0, 1)` + una segunda curva | `(0.2, 0.8, 0.4, 1)`, una sola |
+| Duraciones | 150 / 240 / 400 ms | 150 / 300 / 600 ms |
 
-El amarillo es el único que se está usando de verdad hoy: es el color del `tag`
-en los layouts de sección. Los demás están declarados pero sin consumir, salvo
-`--bg-inverse`, que pinta las tres diapositivas oscuras.
+**Impacto medido en la salida:** exactamente **cuatro** de las once diapositivas
+de la plantilla cambian — `cover`, las dos de `section` y `cierre`. Las de
+`section` por partida doble: fondo y color del tag. Ninguna otra caja del deck
+referencia un valor modificado, comprobado recorriendo las cajas compuestas y no
+por captura.
 
----
+De los once cambios, seis no alteran un solo píxel: `--brand-red`,
+`--brand-blue`, el easing, las duraciones y `--r-xl` estaban declarados sin que
+nadie los consumiera. Radios y sombras solo los usa la interfaz del editor.
 
 ## Vacíos conocidos
 

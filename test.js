@@ -139,8 +139,8 @@ assert.equal(cajasIcono.filter(b => b.kind === 'rect' && b.r === 7).length, 1, '
 const malColor = parse('<!-- layout: contenido; color: no-existe -->\n# T\n<!-- bullets -->\n- [a/b] x');
 assert.equal(componer(malColor.slides[0], { meta: {}, n: 1, total: 1 }).boxes.find(b => b.kind === 'icon').fill, '#0043A9');
 
-assert.deepEqual(parse('---\nfuente: kiffo\n---\n# T').fuentes, { display: 'Kiffo BdB', body: 'Kiffo BdB' });
-assert.deepEqual(parse('# T').fuentes, { display: 'Kiffo BdB', body: 'Roboto' });
+assert.deepEqual(parse('---\nfuente: kiffo\n---\n# T').fuentes, { display: 'Kiffo BDB', body: 'Kiffo BDB' });
+assert.deepEqual(parse('# T').fuentes, { display: 'Kiffo BDB', body: 'Roboto' });
 
 // Las referencias de icono de la plantilla deben existir de verdad
 try {

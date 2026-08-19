@@ -13,7 +13,7 @@ const NEGRITA = { display: 600, body: 700 };
 /** "finanzas/ahorro" → ruta del svg en sherpa-assets */
 export const rutaIcono = src => `/assets/iconos/${src}.svg`;
 
-const FUENTES_POR_DEFECTO = { display: 'Kiffo BdB', body: 'Roboto' };
+const FUENTES_POR_DEFECTO = { display: 'Kiffo BDB', body: 'Roboto' };
 
 function Caja({ b, fuentes }) {
   const base = { position: 'absolute', left: b.x, top: b.y, width: b.w };

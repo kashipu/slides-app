@@ -1,5 +1,10 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8">
+<!-- display=block antes del CSS del sistema: con swap, una captura tomada
+     mientras Roboto viaja por la red sale con métricas de la fuente de
+     respaldo y el diff reporta diferencias que no existen. Con block el texto
+     espera a la fuente real. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=block">
 <link rel="stylesheet" href="/base/colors_and_type.css">
 <style>html,body{margin:0;background:#fff;width:1920px;height:1080px;overflow:hidden}</style>
 </head><body><div id="s"></div>

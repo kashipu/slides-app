@@ -52,8 +52,9 @@ fuera.
 
 ## Tipografía
 
-`Kiffo BDB` está disponible en Figma con los 6 pesos. Ojo: la familia se llama
-**`Kiffo BDB`** en mayúsculas, no `Kiffo BdB` como en `base/colors_and_type.css`.
+`Kiffo BDB` está disponible en Figma con los 6 pesos, y el proyecto usa esa
+misma grafía desde que se aplicaron los Lineamientos de Marca — así que no hay
+traducción de nombre entre el CSS y Figma.
 
 Los pesos se mapean a estilos en `config.json`. Si una fuente no cargara,
 `render-slides.js` lo detecta **antes** de construir nada, cae a Roboto y lo
@@ -67,6 +68,14 @@ que reserva el estimador de `layouts.js` (0.45 frente a 0.41 medido) absorbe la
 diferencia.
 
 ## Límites conocidos
+
+- **`--review` no es determinista todavía.** El render de referencia carga
+  Roboto desde Google Fonts, y en headless la fuente a veces no llega antes de
+  la captura: el texto sale con métricas de la fuente de respaldo y el diff
+  reporta diferencias que no existen. Se mitigó con `display=block` y 20 s de
+  presupuesto, pero sigue fallando en ~4 de 11 diapositivas. **Hasta arreglarlo,
+  un `REVISAR` de `--review` hay que confirmarlo a ojo antes de creerlo.** El
+  arreglo de verdad es embeber Roboto como data-URI, igual que Kiffo.
 
 - **Imágenes bitmap** (`.png`, `.jpg`) salen como rectángulo gris: meter los
   bytes en el script reventaría el límite de 50k. Hay que subirlas a mano o con

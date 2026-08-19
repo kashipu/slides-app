@@ -17,7 +17,7 @@ export function capturar(deck, n, salida, base = 'http://localhost:5173') {
   const url = `${base}/tools/figma/slide.html?deck=${encodeURIComponent(deck)}&n=${n}`;
   execFileSync(chrome, [
     '--headless', '--disable-gpu', '--no-sandbox', '--hide-scrollbars',
-    '--virtual-time-budget=8000', '--window-size=1920,1080',
+    '--virtual-time-budget=20000', '--window-size=1920,1080',
     `--screenshot=${salida}`, url,
   ], { stdio: 'ignore' });
   return salida;

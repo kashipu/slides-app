@@ -7,6 +7,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from '../../src/core/parse.js';
 import { componer } from '../../src/core/layouts.js';
+import { tokens as T } from '../../src/core/tokens.js';
 
 const RAIZ = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const CFG = JSON.parse(readFileSync(`${RAIZ}/tools/figma/config.json`, 'utf8'));
@@ -53,7 +54,7 @@ export function arbol(md, nombreDeck) {
         // dentro del script, y eso revienta el límite de 50k de use_figma.
         // Se marca y sale como rectángulo, igual que hace la tool de banca-móvil.
         if (b.src.endsWith('.svg') && pedirSVG(b.src, b.src)) salida.push({ ...b, kind: 'svg' });
-        else { bitmaps.push(b.src); salida.push({ kind: 'rect', x: b.x, y: b.y, w: b.w, h: b.h, fill: '#E6E6E6' }); }
+        else { bitmaps.push(b.src); salida.push({ kind: 'rect', x: b.x, y: b.y, w: b.w, h: b.h, fill: T.carbon200 }); }
         continue;
       }
       salida.push(b);
@@ -63,7 +64,8 @@ export function arbol(md, nombreDeck) {
 
   return {
     pagina: nombreDeck || ir.meta.titulo || 'Presentación',
-    fuentes: { display: CFG.fuentes.display, body: ir.fuentes.body === 'Kiffo BdB' ? CFG.fuentes.display : CFG.fuentes.body },
+    // El CSS y Figma ya usan la misma grafía, así que no hay traducción que hacer.
+    fuentes: { display: CFG.fuentes.display, body: ir.fuentes.body },
     estilos: CFG.estilos,
     separacion: CFG.separacionFrames,
     slides,

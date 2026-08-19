@@ -2,6 +2,7 @@
 // embebidos como data-URI. Se abre sin servidor, sin red y sin este proyecto al lado.
 import { renderToStaticMarkup } from 'react-dom/server';
 import { CANVAS } from '../core/layouts.js';
+import { tokens as T } from '../core/tokens.js';
 import { Deck } from '../ui/Deck.jsx';
 
 const KIFFO = [['Light', 300], ['Regular', 400], ['Medium', 500], ['SemiBold', 600]];
@@ -52,7 +53,7 @@ export async function exportarHTML(ir) {
   const markup = await embeber(renderToStaticMarkup(<Deck ir={ir} />));
 
   const caras = await Promise.all(KIFFO.map(async ([nombre, peso]) =>
-    `@font-face{font-family:"Kiffo BdB";src:url("${await dataURI(`/base/fonts/KiffoBDB-${nombre}.otf`)}") format("opentype");font-weight:${peso};font-style:normal}`));
+    `@font-face{font-family:"Kiffo BDB";src:url("${await dataURI(`/base/fonts/KiffoBDB-${nombre}.otf`)}") format("opentype");font-weight:${peso};font-style:normal}`));
 
   let fuenteBody;
   try { fuenteBody = await roboto(); }
@@ -66,9 +67,9 @@ export async function exportarHTML(ir) {
 ${caras.join('\n')}
 ${fuenteBody}
 *{box-sizing:border-box}
-html,body{margin:0;background:#F2F2F2}
+html,body{margin:0;background:${T.carbon50}}
 #deck{display:flex;flex-direction:column;gap:24px;padding:24px;width:max-content}
-.slide{box-shadow:0 12px 32px rgba(0,49,126,.12);border-radius:2px;flex:0 0 auto}
+.slide{box-shadow:${T.shadowBox};border-radius:2px;flex:0 0 auto}
 @page{size:${CANVAS.w}px ${CANVAS.h}px;margin:0}
 @media print{html,body{background:#fff}#deck{gap:0;padding:0;zoom:1!important}
 .slide{box-shadow:none;border-radius:0;break-after:page}}

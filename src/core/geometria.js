@@ -28,7 +28,7 @@ export const TYPE = {
 // ponytail: estimación de alto por ancho medio de carácter, no métricas reales.
 // Alcanza con regiones holgadas + el lint de longitud. Si algo se desborda, el
 // upgrade es medir con canvas measureText en la preview y cachear.
-// Calibrado midiendo Kiffo BdB 120px y Roboto 32px renderizados a 1920 (0.41 y
+// Calibrado midiendo Kiffo BDB 120px y Roboto 32px renderizados a 1920 (0.41 y
 // 0.48 reales); se deja margen al alza porque quedarse corto solapa cajas y
 // pasarse solo reserva aire. Esta es la perilla: si un título se parte de más,
 // bájalos. El Roboto de Figma es 2-6% más ancho y también entra en ese margen.
