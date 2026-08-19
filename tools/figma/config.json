@@ -1,0 +1,13 @@
+{
+  "fileKey": "CdvRz2CU20bcXHJIA7XNN4",
+  "archivo": "https://www.figma.com/design/CdvRz2CU20bcXHJIA7XNN4/Presentaciones",
+  "fuentes": {
+    "display": "Kiffo BDB",
+    "body": "Roboto"
+  },
+  "estilos": {
+    "Kiffo BDB": { "100": "Thin", "200": "ExtraLight", "300": "Light", "400": "Regular", "500": "Medium", "600": "SemiBold" },
+    "Roboto":    { "400": "Regular", "500": "Medium", "600": "SemiBold", "700": "Bold" }
+  },
+  "separacionFrames": 200
+}

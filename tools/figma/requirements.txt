@@ -1,0 +1,4 @@
+# Solo las usa la revisión visual (--review) y su test.
+# Instalar con: python3 -m pip install -r tools/figma/requirements.txt
+pillow>=10
+numpy>=1.24

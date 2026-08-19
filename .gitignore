@@ -1,0 +1,26 @@
+# Sistema de diseño Sherpa: tipografía propietaria del banco y el material
+# interno del que salen los tokens. No se publica — ver README.
+base/
+
+# Sincronizado desde diseno-exp/sherpa-assets con `npm run sync-assets`
+assets/
+
+# Dependencias y artefactos de build
+node_modules/
+dist/
+out/
+
+# Imágenes subidas desde el editor: son de cada deck, no del repo.
+# Comenta esta línea si quieres versionarlas junto a sus .md
+decks/img/*
+!decks/img/placeholder.svg
+
+# Caché y salidas de las herramientas
+tools/figma/.cache/
+*.pptx
+
+# Config local de Claude Code (permisos por máquina)
+.claude/
+
+# macOS
+.DS_Store

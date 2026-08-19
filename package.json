@@ -1,0 +1,23 @@
+{
+  "name": "slides-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Generador de presentaciones Banco de Bogotá — sistema de diseño Sherpa",
+  "scripts": {
+    "start": "vite",
+    "test": "node test.js",
+    "tokens": "node scripts/build-tokens.js",
+    "sync-assets": "rm -rf assets && git clone --depth 1 https://github.com/diseno-exp/sherpa-assets.git assets && rm -rf assets/.git",
+    "build": "vite build",
+    "figma": "python3 tools/figma/push.py"
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.5",
+    "vite": "^8.2.1"
+  }
+}
