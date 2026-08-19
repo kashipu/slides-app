@@ -11,7 +11,7 @@
   html, body { height: 100%; margin: 0; overflow: hidden; background: var(--carbon-50) }
   #root { height: 100% }
 
-  #app { display: grid; grid-template-columns: 560px 1fr; height: 100vh }
+  #app { display: grid; grid-template-columns: 620px 1fr; height: 100vh }
 
   aside { display: flex; flex-direction: column; background: var(--white);
           border-right: 1px solid var(--border-default); min-height: 0 }
@@ -70,36 +70,75 @@
                       padding: 8px; font: 12px/1.6 ui-monospace, Menlo, monospace;
                       color: var(--fg-default); outline: none }
 
-  /* Lista fusionada: cada slide es su miniatura + su propio editor de texto */
-  .lista { flex: 1; min-height: 0; overflow: auto; background: var(--bg-muted) }
-  ol.slides { list-style: none; margin: 0; padding: 12px; display: flex;
-              flex-direction: column; gap: 12px }
-  ol.slides li { background: var(--white); border-radius: var(--r-md);
-                 border: 2px solid var(--border-default) }
+  /* Edición: tira de miniaturas + formulario de la diapositiva seleccionada */
+  .edicion { flex: 1; min-height: 0; display: flex }
+
+  .tira { width: 172px; flex: 0 0 auto; overflow: auto; background: var(--bg-muted);
+          border-right: 1px solid var(--border-default) }
+  ol.slides { list-style: none; margin: 0; padding: 10px; display: flex;
+              flex-direction: column; gap: 8px }
+  ol.slides li { background: var(--white); border-radius: var(--r-sm);
+                 border: 2px solid transparent }
   ol.slides li.sel { border-color: var(--border-accent) }
   ol.slides li.sobre { border-color: var(--accent-help); border-style: dashed }
-
-  .cab { display: flex; align-items: center; gap: 6px; padding: 5px 8px;
-         border-bottom: 1px solid var(--border-default) }
-  .cab .asa { cursor: grab; color: var(--fg-disabled); font-size: 13px; line-height: 1;
-              padding: 2px 3px; user-select: none }
-  .cab .asa:active { cursor: grabbing }
-  .cab .etiqueta { flex: 1; font: 400 10px/1.2 var(--font-body); color: var(--fg-disabled);
-                   overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
-  .acciones { display: flex; gap: 1px }
-  .acciones button { padding: 2px 5px; font-size: 11px; line-height: 1;
+  .mini { display: block; padding: 0; border: 0; border-radius: 3px 3px 0 0;
+          overflow: hidden; background: none; cursor: grab }
+  .mini:active { cursor: grabbing }
+  .cab { display: flex; align-items: center; gap: 2px; padding: 2px 4px }
+  .etiqueta { flex: 1; font: 400 9px/1.2 var(--font-body); color: var(--fg-disabled);
+              overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+  .acciones { display: flex; gap: 0; flex: 0 0 auto }
+  .acciones button { padding: 2px 3px; font-size: 10px; line-height: 1;
                      border-color: transparent; background: none }
   .acciones button:disabled { opacity: .25 }
 
-  .cuerpo { display: flex; gap: 8px; padding: 8px; align-items: stretch }
-  .mini { flex: 0 0 auto; padding: 0; border: 1px solid var(--border-default);
-          border-radius: 3px; overflow: hidden; background: none; cursor: pointer }
-  .mini:hover { border-color: var(--border-accent); background: none }
-  .cuerpo textarea { flex: 1; min-width: 0; resize: vertical; min-height: 99px;
-                     border: 1px solid var(--border-default); border-radius: var(--r-sm);
-                     padding: 8px; font: 12px/1.6 ui-monospace, Menlo, monospace;
-                     color: var(--fg-default); outline: none; tab-size: 2 }
-  .cuerpo textarea:focus { border-color: var(--border-accent) }
+  /* Formulario de la diapositiva */
+  .form { flex: 1; min-width: 0; overflow: auto; padding: 14px;
+          display: flex; flex-direction: column; gap: 12px }
+  .form-cab { display: flex; align-items: center; justify-content: space-between }
+  .form-cab .num { font: 600 10px/1 var(--font-body); letter-spacing: .06em;
+                   text-transform: uppercase; color: var(--fg-disabled) }
+  .form-cab button { padding: 5px 9px; font-size: 11px }
+
+  .form label { display: flex; flex-direction: column; gap: 4px;
+                font: 600 10px/1 var(--font-body); letter-spacing: .05em;
+                text-transform: uppercase; color: var(--fg-muted) }
+  .form input, .form textarea, .form select, .crudo {
+    font: 400 13px/1.5 var(--font-body); padding: 7px 9px; border-radius: var(--r-sm);
+    border: 1px solid var(--border-default); color: var(--fg-default);
+    outline: none; text-transform: none; letter-spacing: normal; width: 100% }
+  .form input:focus, .form textarea:focus { border-color: var(--border-accent) }
+  .form textarea { resize: vertical; font-family: var(--font-body) }
+  .crudo { flex: 1; min-height: 300px; resize: none;
+           font: 12px/1.6 ui-monospace, Menlo, monospace }
+
+  .fila { display: flex; gap: 6px; align-items: center }
+  .fila input { flex: 1 }
+  .fila-final { display: flex; gap: 8px; align-items: flex-end; margin-top: 4px }
+  .fila-final .crece { flex: 1 }
+
+  .lista-campo { display: flex; flex-direction: column; gap: 6px }
+  .etiqueta-campo { display: flex; justify-content: space-between; align-items: baseline;
+                    font: 600 10px/1 var(--font-body); letter-spacing: .05em;
+                    text-transform: uppercase; color: var(--fg-muted) }
+  .etiqueta-campo small { font-weight: 400; text-transform: none; letter-spacing: normal;
+                          color: var(--fg-disabled) }
+  .item { display: flex; gap: 6px; align-items: center; padding: 6px;
+          background: var(--bg-subtle); border-radius: var(--r-sm) }
+  .campos-item { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px }
+  .anadir { align-self: flex-start; padding: 5px 10px; font-size: 11px }
+
+  /* Chip de icono: en un textarea solo se veía [categoria/nombre] */
+  .chip { display: flex; align-items: center; gap: 1px; flex: 0 0 auto; align-self: flex-start }
+  .chip button { padding: 3px; border-color: transparent; background: var(--white);
+                 border-radius: var(--r-sm); line-height: 0; flex: 0 0 auto }
+  .chip img { width: 20px; height: 20px; display: block }
+  .chip .quitar { font-size: 9px; padding: 1px 2px; background: none; color: var(--fg-disabled);
+                  border-radius: var(--r-pill) }
+  button.chip.vacio { flex: 0 0 auto; align-self: flex-start; width: 28px; height: 28px;
+                      padding: 0; display: grid; place-items: center; font-size: 13px;
+                      border: 1px dashed var(--border-strong); border-radius: var(--r-sm);
+                      background: var(--white); color: var(--fg-disabled) }
 
   #avisos { max-height: 30%; overflow: auto; padding: 12px 16px; font: 12px/1.5 var(--font-body);
             color: var(--warning-900); background: var(--warning-100);

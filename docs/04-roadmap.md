@@ -60,6 +60,22 @@ Se adoptó framework cuando el destino lo justificó: **más layouts, mejor edit
 
 **La disciplina que se mantuvo:** toda la lógica del editor vive en funciones puras (`md.js`, `iconos.js`) que `node test.js` prueba sin navegador. Los componentes React solo las llaman. Reordenar, duplicar y borrar operan sobre la lista de bloques de Markdown, no sobre el IR: lo que se mueve es el texto, así que el `.md` sigue siendo la única fuente de verdad.
 
+## Fase 1.7 — Edición por campos ✅
+
+El `<textarea>` tenía dos problemas que resultaron ser el mismo: **los iconos se veían como `[finanzas/x]`** porque un textarea es texto plano por definición, y **el espacio quedaba corto** porque había 11 editores abiertos cuando solo se edita uno.
+
+- [x] `src/ui/campos.js` — `CAMPOS` (qué campos usa cada layout) y la conversión campos ↔ bloque, pura
+- [x] `src/core/inline.js` — `aTexto()`, inverso exacto de `runs()`
+- [x] `src/ui/SlideForm.jsx` — formulario de la diapositiva seleccionada, con chips de icono reales
+- [x] `src/ui/ListaSlides.jsx` — vuelve a ser solo miniaturas: navegar y reordenar
+- [x] Botón **Markdown** por diapositiva: no se quita la edición cruda, se relega
+
+**La garantía que lo sostiene:** `test.js` comprueba que `aBloque(aCampos(b))` produce **el mismo IR** que `b` en las 11 diapositivas de la plantilla. Editar por campos no puede perder información, y el `.md` sigue siendo la fuente de verdad — Figma, PDF y HTML no se enteran del cambio.
+
+También verifica que `CAMPOS` y el catálogo de `layouts.js` coincidan: si se separaran, el formulario mostraría campos que no pinta nadie.
+
+**Se descartó CodeMirror otra vez, y ahora con datos.** Habría resuelto el `[finanzas/x]` con widgets inline, pero no el problema del espacio, y a cambio traía una dependencia. El formulario resuelve los dos.
+
 ## Fase 2 — Figma Design ✅
 
 **Entregable:** `npm run figma -- decks/plantilla.md` → una página de Figma con un frame de 1920×1080 por slide, en [Presentaciones](https://www.figma.com/design/CdvRz2CU20bcXHJIA7XNN4/Presentaciones).

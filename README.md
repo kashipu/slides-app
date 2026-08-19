@@ -10,9 +10,11 @@ npm test      # valida parser, lint de estilo y geometría
 npm run figma -- decks/plantilla.md   # → una página en Figma
 ```
 
-En el panel izquierdo cada diapositiva es **su miniatura junto a su propio editor de texto**: editas ahí mismo y el lienzo se actualiza en vivo. Arrastra por el asa `⠿` para reordenar, o usa ↑ ↓ ⧉ ✕ para subir, bajar, duplicar y borrar.
+A la izquierda, la tira de miniaturas: arrastra para reordenar, o usa ↑ ↓ ⧉ ✕ para subir, bajar, duplicar y borrar. Al lado, el **formulario de la diapositiva seleccionada**: título, tag, la lista de puntos con su icono, la imagen y el color de acento. Nada de escribir Markdown a mano — aunque el botón **Markdown** te lo abre si lo prefieres.
 
-La barra de herramientas inserta slides por layout, pone negrita, abre el picker de los **532 iconos** de sherpa-assets (con búsqueda y filtro por categoría), sube imágenes a `decks/img/`, y cambia el color de acento del slide y la fuente del cuerpo.
+Los iconos se eligen del picker de los **532 de sherpa-assets**, con búsqueda y filtro por categoría, y se ven como iconos en el formulario. Las imágenes se suben a `decks/img/`.
+
+El `.md` se sigue generando desde ahí y sigue siendo la fuente de verdad: `node test.js` verifica que editar por campos produzca exactamente el mismo resultado.
 
 **Presentar** entra a pantalla completa (flechas para navegar, Esc para salir), **PDF** imprime a escala exacta y **HTML** descarga un archivo autocontenido.
 

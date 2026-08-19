@@ -1,6 +1,6 @@
 # slides-app — generador de presentaciones Banco de Bogotá
 
-Genera presentaciones on-brand desde archivos Markdown y las exporta a **PDF**, **PPTX editable** y **Figma Design**, usando el design system Sherpa que ya vive en [`base/`](../base/).
+Genera presentaciones on-brand y las exporta a **PDF**, **HTML autocontenido**, **Figma Design** y (pendiente) **PPTX editable**, usando el design system Sherpa de `base/`. Se editan con formulario; el `.md` es el formato de almacenamiento y la fuente de verdad.
 
 ## Índice
 
@@ -20,7 +20,7 @@ Tomadas antes de escribir código, para no descubrirlas a mitad:
 
 | Decisión | Elegido | Por qué |
 |---|---|---|
-| **Autoría** | Archivos Markdown en `decks/` | Versionable en git, diffeable, y un agente puede generarlo. Cero UI que mantener. |
+| **Autoría** | Formulario por diapositiva sobre archivos `.md` en `decks/` | El `.md` es versionable en git, diffeable y generable por un agente. El formulario evita escribirlo a mano — ver fase 1.7. |
 | **PPTX** | Editable nativo (formas y texto reales) | El destinatario tiene que poder ajustar el deck en PowerPoint. Obliga a layouts fijos — ver abajo. |
 | **Figma** | Archivo Figma **Design** (frames 1920×1080), no Figma Slides | El diseñador retoca en el entorno que ya usa, con la librería del banco a mano. Se genera con el MCP de Figma (`use_figma`). |
 | **Design system** | El que ya existe en `base/` | 189 tokens, Kiffo BdB en 6 pesos, logos y previews. No se reconstruye nada. |
@@ -46,6 +46,8 @@ npm run tokens     # regenera src/core/tokens.js si cambia base/colors_and_type.
 npm run sync-assets   # trae los 532 iconos y logos de sherpa-assets a assets/
 ```
 
+`base/` **no está versionado** (lleva tipografía propietaria del banco) — ver el README de la raíz.
+
 `base/` y `assets/` se sirven desde la raíz del proyecto en dev (`publicDir: false` en `vite.config.js`), así los `url("fonts/…")` relativos de `base/colors_and_type.css` siguen resolviendo solos.
 
 ## Pipeline
@@ -61,7 +63,7 @@ decks/mi-deck.md
       │
       ├──▶ ui/Deck.jsx      ──▶ creador/visor ──▶ Cmd+P ──▶ PDF
       ├──▶ export/html.jsx  ──▶ un .html autocontenido (fuentes y assets embebidos)
-      ├──▶ export/figma.js  ──▶ MCP use_figma ──▶ archivo de Figma Design
+      ├──▶ tools/figma/     ──▶ MCP use_figma ──▶ una página de Figma Design
       └──▶ export/pptx.js   ──▶ pptxgenjs ──▶ .pptx editable
 ```
 
@@ -93,13 +95,15 @@ slides-app/
 │   │   ├── Editor.jsx       ← panel izquierdo: barra, ajustes del deck y lista
 │   │   ├── Deck.jsx         ← cajas → JSX
 │   │   ├── IconPicker.jsx   ← modal de los 532 iconos
-│   │   ├── ListaSlides.jsx  ← miniatura + textarea por slide; arrastrar, duplicar, borrar
+│   │   ├── ListaSlides.jsx  ← miniaturas: navegar, arrastrar, duplicar, borrar
+│   │   ├── SlideForm.jsx    ← formulario de la diapositiva seleccionada
+│   │   ├── campos.js        ← campos ↔ bloque de Markdown: función PURA
 │   │   ├── md.js            ← edición del deck: funciones PURAS sobre strings
 │   │   └── iconos.js        ← búsqueda en el catálogo: función PURA
 │   └── export/
 │       ├── html.jsx         ← deck → .html autocontenido
-│       ├── figma.js         ← (fase 2)
 │       └── pptx.js          ← (fase 3)
+├── tools/figma/             ← deck → una página de Figma (npm run figma)
 ├── test.js
 └── docs/
 ```
@@ -120,7 +124,7 @@ Lo que se sigue **sin** usar, y por qué:
 - **Sin librería de YAML.** El frontmatter del deck es un mapa plano `clave: valor` — 4 líneas de regex. Si algún día necesita listas o anidamiento, ahí sí entra `yaml`.
 - **Sin Puppeteer.** El HTML lleva `@page { size: 1920px 1080px; margin: 0 }`, así que Cmd+P desde cualquier navegador produce el PDF exacto.
 - **Sin kit de UI** (MUI, shadcn, Chakra). El proyecto ya tiene design system propio: meter otro sería pelear contra Sherpa en cada componente.
-- **Sin CodeMirror.** La barra de herramientas inserta en el cursor con `selectionStart` de un `<textarea>`. Lo único que aportaría es resaltado de sintaxis; entra si se echa de menos, no por adelantado.
+- **Sin CodeMirror.** Se consideró para pintar los `[categoria/icono]` como widgets inline, pero no resolvía el otro problema — la falta de espacio. El formulario por campos resuelve los dos sin dependencia.
 
 ## Lo que NO se construye
 

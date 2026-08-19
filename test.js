@@ -5,6 +5,8 @@ import { parse } from './src/core/parse.js';
 import { componer, CANVAS, LAYOUTS } from './src/core/layouts.js';
 import { runs, plain } from './src/core/inline.js';
 import { filtrarIconos } from './src/ui/iconos.js';
+import { CAMPOS, aCampos, aBloque, itemVacio } from './src/ui/campos.js';
+import { aTexto } from './src/core/inline.js';
 import { arbol } from './tools/figma/tree.mjs';
 import { finFrontmatter as finFm, limites, envolver, ponerOpcion, leerOpcion, ponerFrontmatter, leerFrontmatter, agregarSlide, ESQUELETOS,
   bloques, reconstruir, inicioSlide, moverSlide, borrarSlide, duplicarSlide,
@@ -191,6 +193,39 @@ try {
   assert.deepEqual(parse(cambiado).fuentes, { display: 'Kiffo BdB', body: 'Kiffo BdB' });
   assert.equal(bloques(cambiado).length, 11, 'cambiar el frontmatter no toca los slides');
   assert.equal(finFm(ponerFrontmatterTexto(md, '   ')), 0, 'frontmatter vacío se elimina');
+}
+
+// --- formulario: campos ↔ bloque ---
+{
+  // aTexto es el inverso exacto de runs()
+  for (const t of ['hola **mundo** ya', '**todo**', 'sin nada', '']) {
+    assert.equal(aTexto(runs(t)), t, `ida y vuelta de runs con ${JSON.stringify(t)}`);
+  }
+
+  // El formulario solo puede editar layouts que existan, y todos deben tener campos.
+  assert.deepEqual(Object.keys(CAMPOS).sort(), [...LAYOUTS].sort(),
+    'CAMPOS y el catálogo de layouts tienen que coincidir');
+
+  // La garantía que sostiene el formulario: editar por campos no pierde nada.
+  for (const b of bloques(md)) {
+    const vuelta = aBloque(aCampos(b));
+    assert.deepEqual(parse(vuelta).slides[0], parse(b).slides[0],
+      `campos → bloque cambia el IR:\n${b}\n---\n${vuelta}`);
+  }
+
+  // Campos vacíos no dejan opciones huérfanas en el comentario
+  const limpio = aBloque({ layout: 'bullets', titulo: 'T', tag: '', items: [{ texto: 'a', extra: '', icono: '' }] });
+  assert.equal(limpio.split('\n')[0], '<!-- layout: bullets -->');
+  assert.ok(!limpio.includes('| '), 'sin extra no se escribe el separador |');
+
+  // Un icono elegido en el picker sobrevive el viaje al Markdown
+  const conIcono = aBloque({ layout: 'bullets', titulo: 'T', items: [{ texto: 'x', extra: '', icono: 'finanzas/ahorro' }] });
+  assert.match(conIcono, /- \[finanzas\/ahorro\] x/);
+  assert.equal(aCampos(conIcono).items[0].icono, 'finanzas/ahorro');
+
+  // itemVacio respeta si el layout usa pares
+  assert.equal(itemVacio(CAMPOS.stats.find(f => f.tipo === 'lista')).extra, 'Etiqueta');
+  assert.equal(itemVacio(CAMPOS.bullets.find(f => f.tipo === 'lista')).extra, '');
 }
 
 // --- búsqueda del picker de iconos ---

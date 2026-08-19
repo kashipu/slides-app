@@ -14,3 +14,6 @@ export function runs(texto = '') {
 }
 
 export const plain = rs => rs.map(r => r.t).join('');
+
+/** inverso de runs(): vuelve a Markdown con **negrita** */
+export const aTexto = rs => (rs ?? []).map(r => (r.b && r.t ? `**${r.t}**` : r.t)).join('');
