@@ -109,13 +109,11 @@ export function leerOpcion(md, pos, clave) {
 export const ESQUELETOS = {
   cover: '<!-- layout: cover -->\n# Título de la portada\nSubtítulo o área',
   section: '<!-- layout: section; tag: 01 -->\n# Título de la sección',
-  'title-body': '<!-- layout: title-body; tag: Tema -->\n# Título del slide\n\nEl cuerpo va aquí, en frases de menos de 20 palabras.',
-  bullets: '<!-- layout: bullets; tag: Tema -->\n# Título del slide\n\n- Primer punto\n- Segundo punto\n- Tercer punto',
-  'two-cols': '<!-- layout: two-cols; tag: Comparación -->\n# Título del slide\n\n- Antes | Texto de la columna izquierda.\n- Después | Texto de la columna derecha.',
-  stats: '<!-- layout: stats -->\n# Título del slide\n\n- 100% | Primera cifra\n- 24 | Segunda cifra\n- 3 | Tercera cifra',
-  image: '<!-- layout: image; imagen: decks/img/placeholder.svg; caption: Pie de la imagen -->\n# Título sobre la imagen',
-  quote: '<!-- layout: quote; caption: Quién lo dijo -->\nLa cita va aquí, sin comillas.',
-  closing: '<!-- layout: closing -->\n# Gracias\nUna línea de cierre',
+  contenido: '<!-- layout: contenido; tag: Tema -->\n# Título de la diapositiva\n\n<!-- parrafo -->\nEl cuerpo va aquí, en frases de menos de 20 palabras.',
+  'dos-columnas': '<!-- layout: dos-columnas; tag: Comparación -->\n# Título de la diapositiva\n\n<!-- parrafo -->\nColumna izquierda.\n\n<!-- columna -->\n\n<!-- parrafo -->\nColumna derecha.',
+  destacado: '<!-- layout: destacado -->\n# Lo que queremos destacar\n\n<!-- cita; autor: Quién lo dijo -->\nLa cita va aquí, sin comillas.',
+  imagen: '<!-- layout: imagen; imagen: decks/img/placeholder.svg; caption: Pie de la imagen -->\n# Título sobre la imagen',
+  cierre: '<!-- layout: cierre -->\n# Gracias\nUna línea de cierre',
 };
 
 // --- reordenar, duplicar y borrar slides ---------------------------------
@@ -179,7 +177,7 @@ export const duplicarSlide = (md, i) => conBloques(md, b => {
 /** añade un slide después del que contiene el cursor */
 export function agregarSlide(md, pos, layout) {
   const { fin } = limites(md, pos);
-  const cuerpo = ESQUELETOS[layout] ?? ESQUELETOS['title-body'];
+  const cuerpo = ESQUELETOS[layout] ?? ESQUELETOS.contenido;
   const texto = `\n\n---\n\n${cuerpo}\n`;
   return { md: md.slice(0, fin) + texto + md.slice(fin), sel: fin + texto.length };
 }

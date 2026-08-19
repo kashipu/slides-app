@@ -76,6 +76,27 @@ También verifica que `CAMPOS` y el catálogo de `layouts.js` coincidan: si se s
 
 **Se descartó CodeMirror otra vez, y ahora con datos.** Habría resuelto el `[finanzas/x]` con widgets inline, pero no el problema del espacio, y a cambio traía una dependencia. El formulario resuelve los dos.
 
+## Fase 1.8 — Layouts y componentes ✅
+
+El catálogo de 9 layouts con campos fijos era rigidez disfrazada de variedad: `title-body`, `bullets`, `stats` y `quote` eran casi el mismo layout repetido. Combinar cifras con un párrafo obligaba a inventar un layout para la combinación.
+
+Ahora **el layout define dónde va el contenido y tú metes componentes dentro**, que se añaden, quitan y reordenan.
+
+- [x] `src/core/geometria.js` — canvas, retícula y escala tipográfica, extraídas para que layouts y componentes las compartan sin ciclo
+- [x] `src/core/componentes.js` — 6 componentes que saben medirse: `parrafo`, `bullets`, `stats`, `cita`, `tarjetas`, `imagen`
+- [x] `src/core/layouts.js` — 7 layouts que declaran **regiones**, no campos
+- [x] `src/core/parse.js` — componentes por comentario, `<!-- columna -->` reparte entre regiones
+- [x] `src/ui/SlideForm.jsx` — añadir, quitar y reordenar componentes
+- [x] Compatibilidad con el formato anterior, cubierta por tests
+
+**Por qué no rompe el contrato:** los componentes **se apilan en regiones de geometría conocida**, no flotan libres. Cada uno sabe medirse con un ancho dado; la región los apila; las cajas salen igual para los cuatro destinos. El día que pudieran posicionarse a mano, se caen PPTX y Figma con ellos.
+
+**El formato perdona.** Texto suelto se envuelve en `parrafo`, líneas `- ` en `bullets`, y los layouts viejos (`title-body`, `bullets`, `stats`, `quote`, `two-cols`, `closing`, `image`) se mapean al catálogo nuevo con su contenido envuelto. Un deck guardado en `localStorage` sigue abriendo sin un solo aviso.
+
+**Pensado para que una IA lo use.** Los campos de cada componente se declaran en `core/componentes.js`, no en la UI: el formulario y cualquier generador automático leen la misma fuente. `test.js` verifica que el catálogo del formulario y el de los layouts no se separen.
+
+**Dos huecos que aparecieron al revisar y quedaron cerrados:** la atribución de las citas del formato viejo (`caption`) se perdía, y el texto suelto junto a componentes se descartaba en silencio.
+
 ## Fase 2 — Figma Design ✅
 
 **Entregable:** `npm run figma -- decks/plantilla.md` → una página de Figma con un frame de 1920×1080 por slide, en [Presentaciones](https://www.figma.com/design/CdvRz2CU20bcXHJIA7XNN4/Presentaciones).

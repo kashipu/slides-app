@@ -34,7 +34,9 @@ PPTX editable y Figma Design **no aceptan HTML arbitrario**. Un PPTX editable so
 
 Por lo tanto: **un slide no es HTML libre, es una instancia de un layout con geometría conocida en píxeles.** Ese es el contrato. Todo lo demás sale de ahí.
 
-Consecuencia práctica: si un día se necesita un slide que ningún layout cubre, la respuesta es **agregar un layout al catálogo**, no meter HTML suelto. Un layout nuevo son ~40 líneas en tres archivos.
+Consecuencia práctica: el contenido **sí** es armable — un layout define regiones y tú metes componentes dentro — pero los componentes **se apilan**, no se posicionan a mano. Cada uno sabe medirse con un ancho dado y la región los apila.
+
+Si hace falta una disposición que ningún layout cubre, se **agrega un layout**. Son ~15 líneas.
 
 ## Cómo se corre
 
@@ -88,7 +90,9 @@ slides-app/
 │   ├── core/                ← PURO, sin DOM, corre en node y en el navegador
 │   │   ├── tokens.js        ← GENERADO — 189 tokens con los var() resueltos
 │   │   ├── inline.js        ← **negrita** → runs
-│   │   ├── layouts.js       ← canvas, retícula, escala tipográfica y los 9 layouts
+│   │   ├── geometria.js     ← canvas, retícula y escala tipográfica
+│   │   ├── componentes.js   ← los 6 componentes: saben medirse y pintarse
+│   │   ├── layouts.js       ← los 7 layouts: fondo, cabecera y regiones
 │   │   └── parse.js         ← .md → Deck IR + lint de voz Sherpa
 │   ├── ui/
 │   │   ├── App.jsx          ← estado: markdown, slide actual, presentación

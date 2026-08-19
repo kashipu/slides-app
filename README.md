@@ -10,7 +10,9 @@ npm test      # valida parser, lint de estilo y geometría
 npm run figma -- decks/plantilla.md   # → una página en Figma
 ```
 
-A la izquierda, la tira de miniaturas: arrastra para reordenar, o usa ↑ ↓ ⧉ ✕ para subir, bajar, duplicar y borrar. Al lado, el **formulario de la diapositiva seleccionada**: título, tag, la lista de puntos con su icono, la imagen y el color de acento. Nada de escribir Markdown a mano — aunque el botón **Markdown** te lo abre si lo prefieres.
+A la izquierda, la tira de miniaturas: arrastra para reordenar, o usa ↑ ↓ ⧉ ✕ para subir, bajar, duplicar y borrar. Al lado, el **formulario de la diapositiva seleccionada**.
+
+El layout decide **dónde** va el contenido; tú metes **componentes** dentro — párrafo, puntos, cifras, cita, tarjetas, imagen — y los añades, quitas y reordenas. Nada de escribir Markdown a mano, aunque el botón **Markdown** te lo abre si lo prefieres.
 
 Los iconos se eligen del picker de los **532 de sherpa-assets**, con búsqueda y filtro por categoría, y se ven como iconos en el formulario. Las imágenes se suben a `decks/img/`.
 

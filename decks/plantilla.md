@@ -13,54 +13,69 @@ Sistema de diseño Sherpa · Banco de Bogotá
 ---
 
 <!-- layout: section; tag: 01 -->
-# Cómo se escribe un deck
+# Cómo se arma una diapositiva
 
 ---
 
-<!-- layout: title-body; tag: El formato -->
-# Un archivo de texto, nueve layouts
+<!-- layout: contenido; tag: El modelo -->
+# Layouts y componentes
 
-Cada slide es una instancia de un layout con geometría conocida, no HTML libre. Por eso el mismo archivo sale a **Figma**, a **PowerPoint editable** y a **PDF** sin volver a maquetar.
+<!-- parrafo -->
+El layout decide **dónde** va el contenido. Tú eliges qué componentes meter dentro, y los puedes quitar o reordenar.
 
-Para agregar un slide, escribe tres guiones y arriba un comentario con el layout que quieres.
-
----
-
-<!-- layout: bullets; tag: Reglas -->
-# Lo único que tienes que recordar
-
-- El frontmatter de arriba configura el deck completo, va **una sola vez**
-- Una línea con tres guiones separa slides, nada más
-- La configuración del slide va en un comentario en su primera línea
-- La almohadilla marca el título, el guion marca un item, el texto suelto es el cuerpo
-- Solo hay **negrita** — ni cursivas ni links, porque los tres destinos deben coincidir
+<!-- bullets -->
+- [esenciales/agregar-documento] El **layout** define el fondo y las regiones
+- [esenciales/actualizar-saldos] Los **componentes** se apilan dentro de la región
+- [autenticacion/token-activo] Cada componente sabe medirse, así la geometría sigue cerrada
 
 ---
 
-<!-- layout: two-cols; tag: Comparación -->
+<!-- layout: contenido; tag: Componentes; color: mustard-800 -->
+# Un mismo layout, distinto contenido
+
+<!-- stats -->
+- 189 | Tokens verificados
+- 532 | Iconos disponibles
+- 6 | Componentes
+- 8 | Layouts
+
+<!-- parrafo -->
+Aquí conviven cifras y párrafo en la misma región, sin inventar un layout nuevo para la combinación.
+
+---
+
+<!-- layout: dos-columnas; tag: Comparación -->
 # Antes y después
 
-- Maquetar cada deck a mano | Cada presentación arrancaba de cero, con los colores copiados a ojo del deck anterior y la tipografía sustituida por la que hubiera instalada.
-- Escribir el contenido | El diseño lo pone el sistema. Tú decides qué decir, y el deck sale on-brand en los tres formatos al mismo tiempo.
+<!-- parrafo -->
+Cada layout traía sus campos fijos. Combinar cifras con un párrafo obligaba a crear otro layout.
+
+<!-- columna -->
+
+<!-- parrafo -->
+El layout pone las regiones y tú metes los componentes que hagan falta, en el orden que quieras.
 
 ---
 
-<!-- layout: stats -->
-# El sistema en números
+<!-- layout: contenido; tag: Tarjetas -->
+# Tres ideas en tarjetas
 
-- 189 | Tokens de diseño verificados
-- 510 | Iconos en 16 categorías
-- 9 | Layouts disponibles
-- 3 | Formatos de salida
+<!-- tarjetas -->
+- [naturaleza/arbol] Sostenible | El sistema crece sin multiplicar layouts.
+- [personas/usuarios] Compartido | Diseño y desarrollo leen el mismo catálogo.
+- [dispositivos/mobile-phone] Portátil | El mismo deck sale a cuatro destinos.
 
 ---
 
-<!-- layout: image; imagen: decks/img/placeholder.svg; caption: Fotografía cálida y natural, personas reales, sin duotono ni filtros pesados -->
+<!-- layout: imagen; imagen: decks/img/placeholder.svg; caption: Fotografía cálida y natural, personas reales, sin duotono ni filtros pesados -->
 # La imagen va a sangre
 
 ---
 
-<!-- layout: quote; caption: Sherpa Design System · voice-style.md -->
+<!-- layout: destacado -->
+# Lo que dice el sistema
+
+<!-- cita; autor: Sherpa Design System · voice-style.md -->
 Queremos que sientas que hablas con una persona en tiempo real, incluso en un flujo 100% digital.
 
 ---
@@ -70,16 +85,17 @@ Queremos que sientas que hablas con una persona en tiempo real, incluso en un fl
 
 ---
 
-<!-- layout: bullets; tag: Roadmap -->
-# Los exportadores llegan en este orden
+<!-- layout: contenido; tag: Roadmap -->
+# Los exportadores
 
-- **Figma Design** — un frame de 1920×1080 por slide, con Auto Layout y variables de color
+<!-- bullets -->
+- **Figma Design** — un frame de 1920×1080 por diapositiva, ya funciona
 - **HTML autocontenido** — un solo archivo con fuentes y assets embebidos
-- **PPTX editable** — cajas de texto y formas reales, no imágenes
-- **PDF** — ya funciona hoy desde el botón de arriba
+- **PDF** — impresión a escala exacta desde el navegador
+- **PPTX editable** — cajas de texto y formas reales, pendiente
 
 ---
 
-<!-- layout: closing -->
+<!-- layout: cierre -->
 # Gracias
-Escribe tu deck en el panel de la izquierda
+Arma tu presentación con el formulario de la izquierda
