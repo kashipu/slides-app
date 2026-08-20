@@ -1,6 +1,13 @@
 # Corpus visual business para Sherpa Slides
 
-Estado: investigación inicial · 19 de agosto de 2026
+Estado: curaduría en curso · última actualización 20 de agosto de 2026
+
+**La curaduría real ya empezó.** El avance, las referencias con captura y
+metadata, y los contact sheets viven en [corpus/](corpus/) —
+[corpus/00-avance.md](corpus/00-avance.md) es el documento vivo que se
+actualiza en cada sesión de curaduría; este documento sigue siendo la
+taxonomía y las reglas de admisión que gobiernan ese trabajo, no cambia con
+cada referencia nueva.
 
 ## Objetivo
 
@@ -152,6 +159,23 @@ Reglas:
   [ft-interactive/visual-vocabulary-templates](https://github.com/ft-interactive/visual-vocabulary-templates)
   bajo licencia MIT.
 
+### Candidatos detectados en curaduría, todavía no promovidos
+
+No se agregan al catálogo formal — el gobierno del catálogo
+(`06-plan-producto-premium.md`, sección "Gobierno del catálogo") exige que una
+composición aparezca como necesidad en un deck real antes de entrar, y curar
+el corpus no es lo mismo que construir un deck patrón. Quedan aquí como
+candidatos con evidencia real detrás, para revisar en la Fase 3:
+
+- **`framework-2x2`** — matriz de dos ejes con 4 cuadrantes. Dos fuentes
+  independientes del corpus la usan con el mismo tratamiento (rejilla fina,
+  sin fondo de color). Ver `corpus/consulting-northwind.md` y
+  `corpus/cost-to-serve-teardown.md`.
+- **`agenda-index`** — lista numerada de 3–5 preguntas que el deck responde,
+  como segunda slide. Una sola fuente hasta ahora
+  (`corpus/cost-to-serve-teardown.md`); necesita una segunda antes de
+  considerarse señal fuerte.
+
 ## Fuentes abiertas priorizadas
 
 ### A. Referencias visuales principales
@@ -176,13 +200,14 @@ Dentro de `beautiful-html-templates`, la primera selección es:
 | Editorial Forest | Imagen editorial, chart y framework | Útil para resultados con dimensión humana |
 | Emerald Editorial | Estrategia, resultados, chart y proceso | Útil para ritmo ejecutivo |
 
-Ejemplos business verificables de SlideSpeak:
+Ejemplos business verificables de SlideSpeak — **los cinco ya curados**, ver
+[corpus/00-avance.md](corpus/00-avance.md):
 
-- [AI trust layer pitch](https://github.com/SlideSpeak/slide-design-skill/blob/main/examples/ai-trust-layer-pitch.html)
-- [Balance sheet explainer](https://github.com/SlideSpeak/slide-design-skill/blob/main/examples/balance-sheet-explainer.html)
-- [Consulting Northwind](https://github.com/SlideSpeak/slide-design-skill/blob/main/examples/consulting-northwind.html)
-- [Cost-to-serve teardown](https://github.com/SlideSpeak/slide-design-skill/blob/main/examples/cost-to-serve-teardown.html)
-- [Trade ledger report](https://github.com/SlideSpeak/slide-design-skill/blob/main/examples/trade-ledger-report.html)
+- [AI trust layer pitch](https://github.com/SlideSpeak/slide-design-skill/blob/main/examples/ai-trust-layer-pitch.html) — [corpus/ai-trust-layer-pitch.md](corpus/ai-trust-layer-pitch.md), mayormente rechazada (glassmorphism, tarjetas idénticas)
+- [Balance sheet explainer](https://github.com/SlideSpeak/slide-design-skill/blob/main/examples/balance-sheet-explainer.html) — [corpus/balance-sheet-explainer.md](corpus/balance-sheet-explainer.md), composición sí, superficie no
+- [Consulting Northwind](https://github.com/SlideSpeak/slide-design-skill/blob/main/examples/consulting-northwind.html) — [corpus/consulting-northwind.md](corpus/consulting-northwind.md), aceptada completa
+- [Cost-to-serve teardown](https://github.com/SlideSpeak/slide-design-skill/blob/main/examples/cost-to-serve-teardown.html) — [corpus/cost-to-serve-teardown.md](corpus/cost-to-serve-teardown.md), aceptada completa
+- [Trade ledger report](https://github.com/SlideSpeak/slide-design-skill/blob/main/examples/trade-ledger-report.html) — [corpus/trade-ledger-report.md](corpus/trade-ledger-report.md), aceptada completa
 
 ### B. Mockups y escenas de producto
 

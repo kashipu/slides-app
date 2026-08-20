@@ -54,6 +54,7 @@ código.
 | [03-exportadores.md](03-exportadores.md) | Contratos de exportación | Cambia HTML, PDF, Figma, PPTX o su paridad visual |
 | [04-roadmap.md](04-roadmap.md) | Estado de implementación | Se inicia, completa, descarta o bloquea trabajo técnico |
 | [05-corpus-visual-business.md](05-corpus-visual-business.md) | Investigación y corpus visual | Entran o salen fuentes, referencias, categorías o criterios de admisión |
+| [corpus/00-avance.md](corpus/00-avance.md) | Estado real de la curaduría — qué se revisó, aceptó y rechazó | Se revisa una fuente nueva |
 | [06-plan-producto-premium.md](06-plan-producto-premium.md) | Plan rector de producto y calidad | Cambian alcance, fases, métricas, puertas o arquitectura visual objetivo |
 | Este documento | Orquestación | Se crea, divide, renombra o cambia de responsabilidad un documento |
 
@@ -131,14 +132,19 @@ Ejemplos:
 
 ## Siguiente acción
 
-Ejecutar la **Fase A** del plan rector
-([06-plan-producto-premium.md](06-plan-producto-premium.md), sección
-«Fase A — Intervención visual inmediata del runtime»): subir el piso visual del
-runtime actual — tipografía editorial, componentes sin estética de dashboard,
-layouts con silueta y medio dominante — con instrucciones precisas por archivo
-y puerta de salida comprobable. Los exportadores quedan fuera de la ruta
-crítica; Figma ya cubre la necesidad actual.
+**Hecho:** la Fase A ([06](06-plan-producto-premium.md)) está implementada en
+código — pendiente solo la revisión visual humana. **En curso:** la
+curaduría del corpus ([corpus/00-avance.md](corpus/00-avance.md)) — 48 de 100
+referencias objetivo, con captura real y metadata, de la primera fuente
+prioridad A (`SlideSpeak/slide-design-skill`). Falta la segunda fuente
+prioridad A (`beautiful-html-templates`, 6 sistemas) y, sobre todo, cerrar el
+hueco de referencias de producto/screenshot/mockup — ninguna fuente revisada
+hasta ahora las cubre.
 
-Después de la Fase A: producir contact sheets homogéneas, puntuar las primeras
-100 referencias y seleccionar las 20–30 composiciones que merecen ser
-reinterpretadas dentro de Sherpa.
+**Nota de secuencia:** el plan rector pone la barra visual formal
+(`07-constitucion-visual.md`, Fase 0) antes de curar el corpus (Fase 1). Esta
+sesión curó el corpus primero porque así lo pidió quien opera el proyecto; la
+curaduría usó el criterio de admisión que ya existía en
+[05-corpus-visual-business.md](05-corpus-visual-business.md), no uno nuevo.
+`07-constitucion-visual.md` sigue sin crearse — formalizarlo con lo aprendido
+en esta curaduría es trabajo pendiente, no bloqueante.
