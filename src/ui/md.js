@@ -109,8 +109,11 @@ export function leerOpcion(md, pos, clave) {
 export const ESQUELETOS = {
   cover: '<!-- layout: cover -->\n# Título de la portada\nSubtítulo o área',
   section: '<!-- layout: section; tag: 01 -->\n# Título de la sección',
+  afirmacion: '<!-- layout: afirmacion; tag: Hallazgo -->\n# Las transferencias se completan en tres pasos\nMedido sobre las sesiones reales del último trimestre.',
   contenido: '<!-- layout: contenido; tag: Tema -->\n# Título de la diapositiva\n\n<!-- parrafo -->\nEl cuerpo va aquí, en frases de menos de 20 palabras.',
   'dos-columnas': '<!-- layout: dos-columnas; tag: Comparación -->\n# Título de la diapositiva\n\n<!-- parrafo -->\nColumna izquierda.\n\n<!-- columna -->\n\n<!-- parrafo -->\nColumna derecha.',
+  'dos-tercios': '<!-- layout: dos-tercios; tag: Comparación -->\n# Antes y después del rediseño\n\n<!-- parrafo -->\nEl flujo anterior pedía cinco pantallas para completar una transferencia.\n\n<!-- columna -->\n\n<!-- stats -->\n- 3 | Pasos hoy',
+  'media-lateral': '<!-- layout: media-lateral; imagen: decks/img/placeholder.svg; tag: Producto -->\n# La confirmación queda visible de inmediato\n\n<!-- parrafo -->\nEl usuario ve el estado de la operación sin salir de la pantalla.',
   destacado: '<!-- layout: destacado -->\n# Lo que queremos destacar\n\n<!-- cita; autor: Quién lo dijo -->\nLa cita va aquí, sin comillas.',
   imagen: '<!-- layout: imagen; imagen: decks/img/placeholder.svg; caption: Pie de la imagen -->\n# Título sobre la imagen',
   cierre: '<!-- layout: cierre -->\n# Gracias\nUna línea de cierre',

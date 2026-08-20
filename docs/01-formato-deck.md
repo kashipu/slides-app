@@ -76,11 +76,20 @@ catálogo nuevo y su contenido se envuelve en el componente que corresponde.
 |---|---|---|---|
 | `cover` | Portada | — | `--bg-inverse` |
 | `section` | Divisor de sección | — | `--bg-inverse` |
+| `afirmacion` | Titular de afirmación, sin decoración | — | `--bg-canvas` |
 | `contenido` | El de uso general | 1, a 12 columnas | `--bg-canvas` |
-| `dos-columnas` | Comparación, antes/después | 2, a 6 columnas | `--bg-canvas` |
+| `dos-columnas` | Comparación, antes/después (simétrico 6+6) | 2, a 6 columnas | `--bg-canvas` |
+| `dos-tercios` | Idea principal + cifra o apoyo (asimétrico 8+4) | 2, a 8 + 4 columnas | `--bg-canvas` |
+| `media-lateral` | Producto o screenshot como medio protagonista | 1, a 5 columnas + imagen a sangre | `--bg-canvas` |
 | `destacado` | Una idea sola con aire | 1, a 12 columnas | `--bg-subtle` |
 | `imagen` | Imagen a sangre | — | la imagen |
 | `cierre` | Cierre | — | `--bg-inverse` |
+
+`afirmacion`, `dos-tercios` y `media-lateral` se agregaron en la Fase A del
+plan rector ([06-plan-producto-premium.md](06-plan-producto-premium.md)) para
+que el catálogo pudiera dar tipografía dominante, asimetría real y un medio
+protagonista — hasta entonces la única variedad de composición disponible era
+6+6 columnas con un mismo tamaño de título en todos lados.
 
 Los que no tienen regiones son **estructura**, no contenido armable: su forma es
 el mensaje. Los demás aceptan cualquier componente en cualquier orden.
@@ -94,6 +103,7 @@ el mensaje. Los demás aceptan cualquier componente en cualquier orden.
 | `stats` | `items` `valor \| etiqueta` | De 2 a 4. Los montos siempre en dígitos |
 | `cita` | `texto`, `autor` | Sin comillas; la atribución va aparte |
 | `tarjetas` | `items` `título \| texto` con icono | De 2 a 4 |
+| `tabla` | `filas`, primera fila es encabezado | Columnas separadas por `\|` |
 | `imagen` | `src`, `pie` | 16:9 dentro de la región |
 
 El catálogo vive en [`src/core/componentes.js`](../src/core/componentes.js) con
@@ -116,7 +126,7 @@ generador automático**: una sola fuente, para que no se separen.
 |---|---|
 | `layout` | Uno del catálogo. Default `contenido` |
 | `tag` | Kicker sobre el título |
-| `imagen`, `caption` | Para el layout `imagen` |
+| `imagen`, `caption` | `imagen` para los layouts `imagen` y `media-lateral`; `caption` solo para `imagen` |
 | `color` | Token de Sherpa (`mustard-800`, `success-800`…). Tiñe iconos, viñetas y cifras. Uno inexistente cae al azul interactivo sin romper nada |
 
 El color es **un token del sistema, no un valor RGB libre** — el design system

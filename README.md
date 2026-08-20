@@ -20,7 +20,7 @@ El `.md` se sigue generando desde ahí y sigue siendo la fuente de verdad: `node
 
 **Presentar** entra a pantalla completa (flechas para navegar, Esc para salir), **PDF** imprime a escala exacta y **HTML** descarga un archivo autocontenido.
 
-La plantilla de arranque es [decks/plantilla.md](decks/plantilla.md) — ejercita los 9 layouts disponibles.
+La plantilla de arranque es [decks/plantilla.md](decks/plantilla.md) — ejercita los 10 layouts disponibles.
 
 ## `base/` no está en el repo
 

@@ -44,6 +44,20 @@ Aquí conviven cifras y párrafo en la misma región, sin inventar un layout nue
 
 ---
 
+<!-- layout: contenido; tag: Cifra -->
+# Una cifra puede ser la diapositiva
+
+<!-- stats -->
+- 3 seg | Tiempo para comunicar la idea principal
+
+---
+
+<!-- layout: afirmacion; tag: Afirmación -->
+# La composición hace el trabajo, no la decoración
+Kiffo BDB en 160 px y espacio negativo, sin tarjetas ni iconos de relleno.
+
+---
+
 <!-- layout: dos-columnas; tag: Comparación -->
 # Antes y después
 
@@ -54,6 +68,19 @@ Cada layout traía sus campos fijos. Combinar cifras con un párrafo obligaba a 
 
 <!-- parrafo -->
 El layout pone las regiones y tú metes los componentes que hagan falta, en el orden que quieras.
+
+---
+
+<!-- layout: dos-tercios; tag: Asimetría -->
+# Dos tercios y un tercio
+
+<!-- parrafo -->
+Ocho columnas para la idea principal, cuatro para la cifra que la sostiene.
+
+<!-- columna -->
+
+<!-- stats -->
+- 8+4 | Columnas, no 6+6
 
 ---
 
@@ -87,6 +114,14 @@ El layout pone las regiones y tú metes los componentes que hagan falta, en el o
 
 <!-- parrafo -->
 El componente `imagen` vive dentro de una región y convive con los demás. El layout `imagen` es otra cosa: ocupa la diapositiva entera.
+
+---
+
+<!-- layout: media-lateral; imagen: decks/img/placeholder.svg; tag: Producto -->
+# La confirmación queda visible de inmediato
+
+<!-- parrafo -->
+El usuario ve el estado de la operación sin salir de la pantalla.
 
 ---
 

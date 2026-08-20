@@ -24,6 +24,11 @@ export const CAMPOS_SLIDE = {
     { k: 'titulo', tipo: 'linea', label: 'Título sobre la imagen' },
     { k: 'caption', tipo: 'linea', label: 'Pie de foto' },
   ],
+  afirmacion: [
+    { k: 'tag', tipo: 'linea', label: 'Tag' },
+    { k: 'titulo', tipo: 'linea', label: 'Título' },
+    { k: 'body', tipo: 'linea', label: 'Apoyo (opcional)' },
+  ],
   cierre: [
     { k: 'titulo', tipo: 'linea', label: 'Título' },
     { k: 'body', tipo: 'linea', label: 'Línea de cierre' },
@@ -35,7 +40,11 @@ export const CAMPOS_SLIDE = {
   ],
 };
 CAMPOS_SLIDE['dos-columnas'] = CAMPOS_SLIDE.contenido;
+CAMPOS_SLIDE['dos-tercios'] = CAMPOS_SLIDE.contenido;
 CAMPOS_SLIDE.destacado = CAMPOS_SLIDE.contenido;
+// media-lateral es cabecera + componentes, igual que contenido, más la
+// imagen a sangre que pinta def.fijas() en src/core/layouts.js.
+CAMPOS_SLIDE['media-lateral'] = [...CAMPOS_SLIDE.contenido, { k: 'imagen', tipo: 'imagen', label: 'Imagen a sangre' }];
 
 export const LAYOUTS_UI = Object.entries(CATALOGO).map(([k, v]) => ({
   k, label: v.label, especial: !!v.especial, regiones: numRegiones(k),

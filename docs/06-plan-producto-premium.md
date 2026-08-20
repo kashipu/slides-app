@@ -227,12 +227,29 @@ Layouts rediseñados:
 - `tarjetas` y `tabla` no emiten ningún `rect` de relleno — solo filetes de
   hasta 4 px.
 - Un `stats` de un item pinta su valor a 240 px.
-- La plantilla, vista como tira de miniaturas en la aplicación, cumple: no hay
-  dos slides adyacentes con la misma silueta; al menos una slide tiene un medio
-  ocupando ≥45 % del lienzo; al menos una slide es tipografía dominante con
-  espacio negativo (`afirmacion`).
+- La plantilla, vista como tira de miniaturas en la aplicación, cumple: al
+  menos una slide tiene un medio ocupando ≥45 % del lienzo (`media-lateral`);
+  al menos una slide es tipografía dominante con espacio negativo
+  (`afirmacion`); y ninguna secuencia de slides adyacentes se **ve** repetida
+  — el mismo `layout` puede repetirse (`contenido` es el layout de uso
+  general, a propósito, y la plantilla existe para ejercitar el catálogo
+  completo, no para ser un deck de contenido real), pero su composición real
+  de componentes tiene que producir una silueta distinta cada vez.
 - Revisión visual humana de las miniaturas contra los fallos críticos de este
   plan antes de dar la fase por cerrada.
+
+> **Corrección ejecutada el 20 de agosto de 2026:** el borrador original de
+> esta puerta pedía «no hay dos slides adyacentes con el mismo layout». Al
+> ejecutar la Fase A eso resultó ser una regla equivocada para
+> `decks/plantilla.md`: es un deck de referencia que existe para ejercitar
+> todo el catálogo, y varias de sus slides repiten `contenido` a propósito
+> con contenido distinto (una con `bullets`, la siguiente con `stats`, la
+> siguiente con un kpi-hero) — precisamente lo que la Fase 1.8 del roadmap
+> dejó documentado como la razón de ser de "layout ≠ campos fijos". La regla
+> correcta evalúa la silueta real (forma de la composición), no el nombre del
+> layout; para un deck de contenido real (no de referencia) sigue aplicando
+> el fallo crítico ya existente en este documento: «tres slides consecutivas
+> con la misma silueta».
 
 ## Principios no negociables
 

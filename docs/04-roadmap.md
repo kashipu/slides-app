@@ -97,6 +97,49 @@ Ahora **el layout define dónde va el contenido y tú metes componentes dentro**
 
 **Dos huecos que aparecieron al revisar y quedaron cerrados:** la atribución de las citas del formato viejo (`caption`) se perdía, y el texto suelto junto a componentes se descartaba en silencio.
 
+## Fase 1.9 — Piso visual editorial ✅
+
+**Entregable:** el catálogo de layouts y componentes deja de producir slides
+genéricas. Ejecutada el 20 de agosto de 2026 como la Fase A del plan rector
+([06-plan-producto-premium.md](06-plan-producto-premium.md), sección «Fase A
+— Intervención visual inmediata del runtime»), que reprioriza el trabajo:
+los exportadores salen de la ruta crítica (Figma ya lleva bien la
+composición; PPTX se pospone) y la prioridad pasa a ser la calidad visual
+del runtime existente.
+
+- [x] `src/core/geometria.js` — tres pasos nuevos en `TYPE`: `displayXL`
+      (160px, titular de afirmación), `statHero` (240px, cifra protagonista)
+      y `numero` (200px, número gigante de sección); `quote` sube de 56 a 64
+- [x] `src/core/componentes.js` — `tarjetas`, `tabla`, `stats` y `cita`
+      reescritos sin `rect` de fondo: filetes de acento en vez de tarjetas y
+      celdas con radio, que era exactamente el anti-patrón "dashboard
+      encogido" que el plan rector rechaza. `stats` con un solo item activa
+      un registro kpi-hero (valor a 240px)
+- [x] `src/core/layouts.js` — tres layouts nuevos (`afirmacion`, tipografía
+      dominante con espacio negativo; `dos-tercios`, asimetría real 8+4;
+      `media-lateral`, imagen a sangre ocupando 57% del lienzo junto a una
+      columna de texto) y rediseño de `cover` y `section` para que tengan
+      silueta reconocible en miniatura. `componer()` gana soporte para
+      `cabeceraW` y `fijas(s, ctx)`
+- [x] `src/ui/campos.js`, `src/ui/md.js`, `decks/plantilla.md` — los tres
+      layouts nuevos y el kpi-hero quedan cableados al formulario, a la
+      barra de creación y a la plantilla de referencia (13 → 17 slides, 7 →
+      10 layouts)
+- [x] `test.js` — conteos actualizados y una prueba de regresión nueva:
+      `tarjetas` y `tabla` no pueden volver a pintar un `rect` con radio o de
+      más de 4px de alto, y un `stats` de un item tiene que pintar su valor
+      a 240px
+
+**Check:** `node test.js` → 17 slides, 10 layouts, 7 componentes, 0 avisos,
+ninguna caja fuera del canvas.
+
+**Lo que no se hizo, a propósito:** ni gráficas ni mockups de producto — el
+plan rector los deja para la Fase 4 («Completar capacidades visuales
+mínimas»), después de curar el corpus visual y aprobar las 16 composiciones.
+Esta fase resuelve el piso del *runtime* (tipografía, ausencia de fondos
+decorativos, siluetas distintas), no el catálogo completo de composiciones
+premium.
+
 ## Fase 2 — Figma Design ✅
 
 **Entregable:** `npm run figma -- decks/plantilla.md` → una página de Figma con un frame de 1920×1080 por slide, en [Presentaciones](https://www.figma.com/design/CdvRz2CU20bcXHJIA7XNN4/Presentaciones).

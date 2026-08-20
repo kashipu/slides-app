@@ -52,6 +52,20 @@ La escala de Sherpa (`--text-h1: 56px`) está calibrada para lectura a 50 cm en 
 
 **Piso de legibilidad: 20 px.** Nada por debajo en un slide — si el contenido no cabe a 20 px, el contenido sobra, no la tipografía.
 
+> **Nota de la Fase A (20 de agosto de 2026):** la implementación real
+> (`TYPE` en [`src/core/geometria.js`](../src/core/geometria.js)) sumó tres
+> pasos por encima de `display`: `displayXL` (160px, titular de afirmación),
+> `statHero` (240px, cifra protagonista de un `stats` con un solo item) y
+> `numero` (200px, número gigante del layout `section`); `quote` subió de 56
+> a 64px. Están documentados con detalle en la tabla "Escala de diapositiva"
+> de [`../design.md`](../design.md), que es la fuente de verdad de esa
+> escala. La tabla de arriba usa nombres `--sl-*` que ya no existen como
+> variables CSS — la escala vive hoy como el objeto `TYPE` en
+> `src/core/geometria.js` — y `Kiffo BdB` debería decir `Kiffo BDB`
+> (corregido en `design.md`, sección «Estado de aplicación»). Reconciliar
+> este documento con la implementación actual es trabajo aparte, fuera del
+> alcance de la Fase A.
+
 Interlínea: `1.25` en títulos (`--leading-tight`), `1.5` en cuerpo (`--leading-normal`). El `1.75` de Sherpa para párrafo web es demasiado aire en un slide.
 
 Las dos familias mantienen el reparto de Sherpa (`typography.md`): **Kiffo BdB** para títulos y cifras, **Roboto** para todo el cuerpo.

@@ -28,7 +28,7 @@ for (const t of ['hola **mundo** ya', '**todo**', 'sin nada', '']) {
 
 // --- parser ---
 assert.equal(ir.meta.titulo, 'Plantilla de presentaciones');
-assert.equal(ir.slides.length, 13, 'la plantilla tiene 13 diapositivas');
+assert.equal(ir.slides.length, 17, 'la plantilla tiene 17 diapositivas');
 assert.equal(ir.slides[0].layout, 'cover');
 assert.equal(plain(ir.slides[0].titulo), 'Plantilla de presentaciones');
 assert.equal(plain(ir.slides[1].tag), '01');
@@ -136,6 +136,37 @@ for (const s of ir.slides) {
   assert.ok(r.boxes[1].y >= r.boxes[0].y + r.boxes[0].h, 'los componentes se apilan con separación, no se solapan');
 }
 
+// --- Fase A: sin estética de dashboard en tarjetas ni tabla ---
+// Puerta de salida del plan rector: ningún rect de relleno, solo filetes de
+// hasta 4px. Un rect con radio (`r`) es la firma de una tarjeta/celda con
+// fondo — si vuelve a aparecer, esta prueba tiene que fallar.
+{
+  const region = { x: 112, y: 340, w: 1696 };
+  const ctx = { tinta: '#0043A9' };
+
+  const tarjetasItems = [1, 2, 3].map(i => ({ runs: runs(`Tarjeta ${i}`), extra: runs('Texto de apoyo'), icono: 'esenciales/agregar-documento' }));
+  const rTarjetas = apilar([{ tipo: 'tarjetas', items: tarjetasItems }], region, ctx);
+  const rectsTarjetas = rTarjetas.boxes.filter(b => b.kind === 'rect');
+  assert.ok(rectsTarjetas.length > 0, 'tarjetas debe pintar al menos el filete superior de cada columna');
+  for (const b of rectsTarjetas) {
+    assert.ok(!b.r, `tarjetas pinta un rect con radio (fondo de tarjeta): ${JSON.stringify(b)}`);
+    assert.ok(b.h <= 4, `tarjetas pinta un rect de más de 4px de alto (fondo, no filete): ${JSON.stringify(b)}`);
+  }
+
+  const rTabla = apilar([{ tipo: 'tabla', filas: [['Canal', 'Estado'], ['Portal', 'Vivo'], ['App', '99.9%']].map(f => f.map(t => runs(t))) }], region, ctx);
+  const rectsTabla = rTabla.boxes.filter(b => b.kind === 'rect');
+  assert.ok(rectsTabla.length > 0, 'tabla debe pintar al menos la regla bajo el encabezado');
+  for (const b of rectsTabla) {
+    assert.ok(!b.r, `tabla pinta un rect con radio (fondo de celda): ${JSON.stringify(b)}`);
+    assert.ok(b.h <= 4, `tabla pinta un rect de más de 4px de alto (fondo, no filete): ${JSON.stringify(b)}`);
+  }
+
+  // Con un solo item, stats es un kpi-hero: el valor se pinta a statHero (240px)
+  const rHero = apilar([{ tipo: 'stats', items: [{ runs: runs('72%'), extra: runs('Adopción'), icono: null }] }], region, ctx);
+  const valorHero = rHero.boxes.find(b => b.kind === 'text' && b.size === 240);
+  assert.ok(valorHero, 'stats con un solo item debe pintar su valor a 240px (statHero)');
+}
+
 // --- iconos y color ---
 const conIcono = parse('<!-- layout: contenido; color: mustard-800 -->\n# T\n<!-- bullets -->\n- [finanzas/ahorro] Texto **fuerte**\n- Sin icono\n- [esenciales/x-y.z] Otro');
 const [i0, i1, i2] = conIcono.slides[0].regiones[0][0].items;
@@ -214,7 +245,7 @@ try {
 // --- exportador de Figma: el árbol que viaja al MCP ---
 {
   const a = arbol(md);
-  assert.equal(a.slides.length, 13);
+  assert.equal(a.slides.length, 17);
   assert.equal(a.pagina, 'Plantilla de presentaciones', 'la página toma el título del deck');
   assert.equal(a.fuentes.display, 'Kiffo BDB', 'el nombre de familia en Figma va en mayúsculas, no como en el CSS');
   assert.deepEqual(a.avisos, [], `el árbol de la plantilla no debe avisar:\n${a.avisos.join('\n')}`);
@@ -241,7 +272,7 @@ try {
   const t = ir.slides.map(s => s.layout);
   const orden = doc => parse(doc).slides.map(s => s.layout);
 
-  assert.equal(bloques(md).length, 13);
+  assert.equal(bloques(md).length, 17);
   assert.deepEqual(orden(reconstruir(md, bloques(md))), t, 'reconstruir es idempotente');
   assert.match(reconstruir(md, bloques(md)), /^---\ntitulo:/, 'conserva el frontmatter');
 
