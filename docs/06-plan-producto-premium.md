@@ -185,8 +185,23 @@ Layouts rediseñados:
   `brandYellow` en (112, 300); el título en `h1` blanco en (112, 560), ancho
   `cols(10)`.
 - `cover`: filete `brandYellow` de 8 px y 160 de ancho en (112, 540); título
-  `display` en y=580; subtítulo `bodyL` en y=880; fecha `caption` en y=980.
+  `display` en y=580; subtítulo `bodyL` en y=860; fecha `caption` en y=950.
   Verificar que con título a dos líneas nada pase de y=1080 − 96.
+
+> **Ejecutado el 20 de agosto de 2026 (Sonnet 5):** las tareas 1–3 quedaron
+> implementadas. Una corrección respecto al borrador original de esta fase:
+> la fecha del `cover` se movió de y=980 a y=950 — a y=980 su altura (≈30 px)
+> pasaba el margen inferior (1080 − 96 = 984) con un título de fecha de dos
+> líneas; con y=950 queda dentro incluso si el subtítulo ocupa dos líneas.
+> `section` usa `numero` en (112, 300) y `h1` en (112, 560), ancho `cols(10)`
+> en ambos — más simple que darle un ancho propio al número, y nunca se sale
+> del lienzo por margen de sobra. `componer()` gana soporte para
+> `def.cabeceraW` (ancho de columna de la cabecera) y `def.fijas(s, ctx)`
+> (cajas que no dependen de la región de texto, como la imagen a sangre de
+> `media-lateral`). `media-lateral` se agregó a `SIN_CHROME`: el isotipo y el
+> folio de página se verían mal sobre una fotografía sin overlay de
+> oscurecimiento, el mismo motivo por el que `imagen` ya estaba en ese
+> conjunto.
 
 **Tarea 4 — Cablear formulario, barra y plantilla**
 

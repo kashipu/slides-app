@@ -70,8 +70,8 @@ layout**. Son ~15 líneas.
 | Lienzo | 1920 × 1080 px, fijo |
 | Retícula | 12 columnas de 112 px, canal 32 px, margen 112 / 96 |
 | Familias | Kiffo BDB (marca) · Roboto (producto) |
-| Layouts | 7 |
-| Componentes | 6 |
+| Layouts | 10 |
+| Componentes | 7 |
 | Destinos | PDF · HTML autocontenido · Figma Design · PPTX editable |
 
 `112 + (12 × 112) + (11 × 32) + 112 = 1920` — la retícula cierra exacta, y todos
@@ -273,14 +273,24 @@ termine la cabecera si esta se pasó de largo.
 |---|---|---|---|
 | `cover` | midnight-700 | — | estructura fija |
 | `section` | midnight-700 | — | estructura fija |
+| `afirmacion` | blanco | — | estructura fija |
 | `contenido` | blanco | sí | 1 × 12 col |
 | `dos-columnas` | blanco | sí | 2 × 6 col |
+| `dos-tercios` | blanco | sí | 2 × (8 + 4) col |
+| `media-lateral` | blanco + imagen a sangre | sí, 5 col | 1 × 5 col |
 | `destacado` | midnight-50 | sí | 1 × 12 col |
 | `imagen` | la imagen | — | estructura fija |
 | `cierre` | midnight-700 | — | estructura fija |
 
 Los que no tienen regiones son **estructura**: su forma es el mensaje y no
 admiten componentes sueltos.
+
+`dos-tercios` da la asimetría 8+4 que `dos-columnas` no puede dar. `afirmacion`
+es tipografía dominante con espacio negativo: título en `displayXL` y nada más
+compitiendo por atención. `media-lateral` reserva el 57% del lienzo a una
+imagen a sangre (`media-lateral.fijas`, no una región) — dentro del rango de
+45–75% que exige la definición de "premium" del plan rector; por eso mismo va
+sin isotipo ni folio de página (`SIN_CHROME`), igual que `imagen`.
 
 ### Catálogo de componentes
 
@@ -291,6 +301,7 @@ admiten componentes sueltos.
 | `stats` | valor \| etiqueta | 2 a 4; montos siempre en dígitos |
 | `cita` | texto, autor | Sin comillas; la atribución va aparte |
 | `tarjetas` | título \| texto, icono | 2 a 4 |
+| `tabla` | filas (encabezado + cuerpo) | Primera fila es encabezado; columnas separadas por `\|` |
 | `imagen` | src, pie | 16:9 dentro de la región |
 
 El catálogo vive en `src/core/componentes.js` con sus campos declarados, y lo
