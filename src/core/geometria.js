@@ -12,12 +12,15 @@ export const CANVAS = {
 export const cols = n => n * CANVAS.col + (n - 1) * CANVAS.gut;
 
 export const TYPE = {
+  displayXL: { size: 160, font: 'display', weight: 500, lh: 1.05 },
   display: { size: 120, font: 'display', weight: 500, lh: 1.1 },
   h1:      { size: 88,  font: 'display', weight: 500, lh: 1.15 },
   h2:      { size: 64,  font: 'display', weight: 500, lh: 1.2 },
   h3:      { size: 40,  font: 'display', weight: 500, lh: 1.25 },
+  statHero: { size: 240, font: 'display', weight: 600, lh: 1.0 },
   stat:    { size: 96,  font: 'display', weight: 600, lh: 1.1 },
-  quote:   { size: 56,  font: 'display', weight: 300, lh: 1.3 },
+  numero:  { size: 200, font: 'display', weight: 300, lh: 1.0 },
+  quote:   { size: 64,  font: 'display', weight: 300, lh: 1.3 },
   bodyL:   { size: 32,  font: 'body',    weight: 400, lh: 1.5 },
   body:    { size: 28,  font: 'body',    weight: 400, lh: 1.5 },
   tag:     { size: 24,  font: 'body',    weight: 600, lh: 1.3, tracking: 1.6 },

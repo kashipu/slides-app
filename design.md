@@ -209,17 +209,25 @@ propia **derivada** de aquella, con los mismos saltos:
 
 | Estilo | Tamaño | Interlínea | Familia / peso | Uso |
 |---|---|---|---|---|
+| displayXL | 160 | 1.05 | Kiffo Medium | Titular de afirmación (layout `afirmacion`) |
 | display | 120 | 1.1 | Kiffo Medium | Título de portada |
 | h1 | 88 | 1.15 | Kiffo Medium | Título de sección |
 | h2 | 64 | 1.2 | Kiffo Medium | Título de diapositiva |
 | h3 | 40 | 1.25 | Kiffo Medium | Subtítulo, título de columna |
+| statHero | 240 | 1.0 | Kiffo SemiBold | Cifra protagonista (`stats` con un solo item) |
 | stat | 96 | 1.1 | Kiffo SemiBold | Cifra |
-| quote | 56 | 1.3 | Kiffo Light | Cita |
+| numero | 200 | 1.0 | Kiffo Light | Número gigante de sección (`section`) |
+| quote | 64 | 1.3 | Kiffo Light | Cita |
 | bodyL | 32 | 1.5 | Roboto Regular | Cuerpo, puntos |
 | body | 28 | 1.5 | Roboto Regular | Cuerpo denso, columnas |
 | tag | 24 | 1.3 | Roboto SemiBold, tracking 1.6 px | Kicker sobre el título |
 | caption | 20 | 1.5 | Roboto Regular | Pie, metadatos |
 | footer | 16 | 1.5 | Roboto Regular | Número de diapositiva |
+
+Los tres primeros y `numero` amplían la escala derivada para dar registro
+editorial (afirmación tipográfica, cifra protagonista, número de sección
+gigante); la escala de producto (`H1`/`paragraph-m`) no se toca — ver «Fase A»
+en [docs/06-plan-producto-premium.md](docs/06-plan-producto-premium.md).
 
 **Piso de legibilidad: 20 px.** Si el contenido no cabe a 20 px, sobra
 contenido, no falta tipografía.
