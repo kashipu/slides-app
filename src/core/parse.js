@@ -15,6 +15,11 @@ const opciones = txt => pares(txt.split(';').join('\n'));
 
 const EMOJI = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u;
 
+// Un item recién añadido desde el editor todavía no tiene texto y se escribe
+// como "- ", que al trimear queda en "-". Si no se acepta esa forma, las filas
+// vacías del formulario desaparecen en cuanto el markdown se vuelve a leer.
+const ITEM = /^-(\s|$)/;
+
 // Los layouts de antes de que existieran los componentes. Se mapean al nuevo
 // catálogo y su contenido suelto se envuelve en el componente que corresponda,
 // para que un deck viejo (o guardado en localStorage) siga abriendo.
@@ -42,7 +47,7 @@ function componente(tipo, cfg, lineas) {
   for (const l of lineas) {
     const t = l.trim();
     if (!t) { if (sueltas.at(-1) !== '') sueltas.push(''); continue; }
-    if (t.startsWith('- ')) items.push(item(t.slice(2)));
+    if (ITEM.test(t)) items.push(item(t.slice(2)));
     else sueltas.push(t);
   }
   const texto = sueltas.join('\n').trim();
@@ -57,6 +62,13 @@ function componente(tipo, cfg, lineas) {
       return { tipo, texto: runs(texto), autor: (cfg.autor || cfg.caption) ? runs(cfg.autor || cfg.caption) : null };
     case 'imagen':
       return { tipo, src: cfg.src ?? '', pie: cfg.pie ? runs(cfg.pie) : null };
+    case 'tabla':
+      // La tabla necesita las celdas completas, no el par texto/extra de item().
+      return {
+        tipo,
+        filas: lineas.map(l => l.trim()).filter(l => ITEM.test(l))
+          .map(l => l.slice(2).split('|').map(celda => runs(celda.trim()))),
+      };
     default:
       return { tipo: 'parrafo', texto: runs(texto) };
   }
@@ -110,7 +122,7 @@ export function parse(md) {
         const t = l.trim();
         if (!t) { if (parrafos.at(-1) !== '') parrafos.push(''); continue; }
         if (t.startsWith('# ')) { titulo = t.slice(2).trim(); continue; }
-        if (t.startsWith('- ')) { sueltos.push(t.slice(2)); continue; }
+        if (ITEM.test(t)) { sueltos.push(t.slice(2)); continue; }
         parrafos.push(t);
       }
       let body = parrafos.join('\n').trim();

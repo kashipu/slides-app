@@ -44,6 +44,14 @@ function Campo({ f, valor, onValor, onFoco, onPicker, onSubir }) {
     </label>
   );
 
+  if (f.tipo === 'tabla') return (
+    <label>{f.label} <small>una fila por línea, columnas con |</small>
+      <textarea rows={5} value={valor ?? ''} placeholder="Canal | Dónde | Segmento" onFocus={onFoco}
+        style={{ fontFamily: 'ui-monospace, Menlo, monospace', fontSize: 12 }}
+        onChange={e => onValor(e.target.value)} />
+    </label>
+  );
+
   if (f.tipo === 'imagen') return (
     <label>{f.label}
       <div className="fila">
@@ -158,6 +166,16 @@ export function SlideForm({ bloque, indice, total, onBloque, onPicker, onImagen,
             <Campo key={f.k} f={f} valor={c[f.k]} onFoco={marcarFoco}
               onValor={v => set({ [f.k]: v })} onPicker={onPicker} onSubir={subir} />
           ))}
+
+          {/* Sin esto, un layout especial parece un editor roto: no sale el botón
+              de añadir y nada dice por qué. */}
+          {!conComponentes && (
+            <p className="nota-especial">
+              <b>{LAYOUTS_UI.find(l => l.k === c.layout)?.label}</b> es un layout especial:
+              su contenido son los campos de arriba y no admite componentes.
+              Para añadirlos, elige <b>Contenido</b>, <b>Dos columnas</b> o <b>Destacado</b>.
+            </p>
+          )}
 
           {conComponentes && c.regiones.map((region, r) => (
             <div key={r} className="region">

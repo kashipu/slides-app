@@ -1,6 +1,7 @@
 // Cajas → JSX. El equivalente exacto del antiguo render-html.js: los renderers
 // solo dibujan lo que compone layouts.js, no reinterpretan nada.
 import { CANVAS, componer } from '../core/layouts.js';
+import { tokens as T } from '../core/tokens.js';
 
 const SVG = {
   'logo-white': '/base/assets/logo-white.svg',
@@ -59,8 +60,17 @@ function Caja({ b, fuentes }) {
       whiteSpace: 'pre-wrap',
       margin: 0,
     }}>
-      {b.runs.map((r, i) =>
-        <span key={i} style={r.b ? { fontWeight: NEGRITA[b.font] } : undefined}>{r.t}</span>)}
+      {b.runs.map((r, i) => (
+        <span key={i} style={{
+          ...(r.b && { fontWeight: NEGRITA[b.font] }),
+          // el resaltado va como sombra lateral para que la barra sobresalga del
+          // texto sin desplazarlo: un padding aquí rompería el alto ya medido
+          ...(r.r && {
+            background: T.brandYellow, color: T.fgDefault,
+            boxShadow: `0 0 0 .12em ${T.brandYellow}`,
+          }),
+        }}>{r.t}</span>
+      ))}
     </div>
   );
 }

@@ -6,14 +6,49 @@ import { Editor } from './Editor.jsx';
 import { borrarSlide, duplicarSlide, moverSlide } from './md.js';
 import { descargarHTML } from '../export/html.jsx';
 
-const CLAVE = 'slides-app:md';
+const CLAVE = 'slides-app:decks';
+const CLAVE_ACTUAL = 'slides-app:actual';
+const PRIMERA = 'Mi presentación';
+
+// Los .md de decks/ los resuelve Vite en build: la lista sale sola, sin
+// endpoint que liste el directorio y sin buscar el archivo a mano.
+const ARCHIVOS = import.meta.glob('/decks/*.md', { query: '?raw', import: 'default' });
+const DEL_PROYECTO = Object.fromEntries(
+  Object.entries(ARCHIVOS).map(([ruta, cargar]) => [ruta.split('/').pop().replace(/\.md$/, ''), cargar]),
+);
+
+const deckVacio = titulo =>
+  `---\ntitulo: ${titulo}\ntema: light\n---\n\n<!-- layout: cover -->\n# ${titulo}\n\n---\n\n<!-- layout: contenido -->\n# Primera diapositiva\n\n<!-- parrafo -->\nEscribe aquí.\n`;
+
+/** Todas las presentaciones viven en una clave: {nombre: markdown}. */
+function cargarDecks() {
+  try {
+    const guardados = JSON.parse(localStorage.getItem(CLAVE) || 'null');
+    if (guardados && Object.keys(guardados).length) return guardados;
+    // La app guardaba una sola presentación en `slides-app:md`. Si queda algo
+    // ahí es el trabajo del usuario: se migra en vez de perderse.
+    const viejo = localStorage.getItem('slides-app:md');
+    if (viejo?.trim()) return { [PRIMERA]: viejo };
+  } catch { /* localStorage corrupto: se empieza de cero */ }
+  return { [PRIMERA]: deckVacio(PRIMERA) };
+}
 
 export function App() {
-  const [md, setMd] = useState(() => localStorage.getItem(CLAVE) ?? '');
+  const [decks, setDecks] = useState(cargarDecks);
+  const [nombre, setNombre] = useState(() => {
+    const guardado = localStorage.getItem(CLAVE_ACTUAL);
+    return guardado && decks[guardado] ? guardado : Object.keys(decks)[0];
+  });
+  // La plantilla es solo de lectura: es el catálogo, no un deck editable.
+  const [verPlantilla, setVerPlantilla] = useState(false);
+  const [plantilla, setPlantilla] = useState('');
   const [actual, setActual] = useState(0);
   const [presentando, setPresentando] = useState(false);
   const [zoom, setZoom] = useState(1);
   const lienzo = useRef(null);
+
+  const md = verPlantilla ? plantilla : (decks[nombre] ?? '');
+  const setMd = txt => setDecks(d => ({ ...d, [nombre]: txt }));
 
   // Un deck a medio escribir puede tener estados que el compositor no espera.
   // parse y componer ya toleran campos vacíos, pero si algo escapa preferimos
@@ -23,12 +58,14 @@ export function App() {
     catch (e) { return { ir: { meta: {}, slides: [], avisos: [] }, error: String(e.message ?? e) }; }
   }, [md]);
 
-  useEffect(() => { localStorage.setItem(CLAVE, md); }, [md]);
+  useEffect(() => { localStorage.setItem(CLAVE, JSON.stringify(decks)); }, [decks]);
+  useEffect(() => { localStorage.setItem(CLAVE_ACTUAL, nombre); }, [nombre]);
 
+  // La plantilla se baja una sola vez, la primera que se abre la vista.
   useEffect(() => {
-    if (md) return;
-    fetch('/decks/plantilla.md').then(r => r.text()).then(setMd);
-  }, []);
+    if (!verPlantilla || plantilla) return;
+    fetch('/decks/plantilla.md').then(r => r.text()).then(setPlantilla);
+  }, [verPlantilla]);
 
   useEffect(() => {
     const ajustar = () => {
@@ -68,6 +105,36 @@ export function App() {
     setActual(hasta);
   };
 
+  const abrir = n => { setNombre(n); setVerPlantilla(false); setActual(0); };
+
+  const crear = () => {
+    const n = prompt('Nombre de la presentación nueva')?.trim();
+    if (!n) return;
+    if (!decks[n]) setDecks(d => ({ ...d, [n]: deckVacio(n) }));
+    abrir(n);
+  };
+
+  /** un .md entra como presentación; si el nombre choca, se numera */
+  const importar = (base, txt) => {
+    let n = base || 'Importada';
+    for (let i = 2; decks[n]; i++) n = `${base} ${i}`;
+    setDecks(d => ({ ...d, [n]: txt }));
+    abrir(n);
+  };
+
+  /** abre uno de los .md que viven en decks/ */
+  const abrirDelProyecto = async base => {
+    if (decks[base]) return abrir(base);
+    importar(base, await DEL_PROYECTO[base]());
+  };
+
+  const borrarDeck = () => {
+    const otros = Object.keys(decks).filter(n => n !== nombre);
+    if (!otros.length || !confirm(`¿Borrar «${nombre}»? No se puede deshacer.`)) return;
+    setDecks(d => Object.fromEntries(Object.entries(d).filter(([n]) => n !== nombre)));
+    abrir(otros[0]);
+  };
+
   return (
     <div id="app" className={presentando ? 'presentando' : undefined}>
       {/* Editor y miniaturas son un solo panel: cada slide se edita en su propio
@@ -78,7 +145,11 @@ export function App() {
         onMover={reordenar}
         onDuplicar={i => { setMd(duplicarSlide(md, i)); setActual(i + 1); }}
         onBorrar={i => { setMd(borrarSlide(md, i)); setActual(Math.max(0, i - 1)); }}
-        onPlantilla={() => fetch('/decks/plantilla.md').then(r => r.text()).then(setMd)}
+        nombre={nombre} nombres={Object.keys(decks)}
+        onAbrir={abrir} onCrear={crear} onBorrarDeck={borrarDeck} onImportar={importar}
+        delProyecto={Object.keys(DEL_PROYECTO)} onAbrirDelProyecto={abrirDelProyecto}
+        verPlantilla={verPlantilla}
+        onPlantilla={() => { setVerPlantilla(v => !v); setActual(0); }}
         onHTML={() => descargarHTML(ir)}
         onPresentar={() => { setPresentando(true); document.documentElement.requestFullscreen?.(); }}
         onPDF={() => print()}

@@ -62,6 +62,8 @@ export function aCampos(bloque) {
       src: c.src ?? '',
       pie: aTexto(c.pie),
       items: (c.items ?? []).map(desItem),
+      // una fila por línea, columnas separadas por |
+      filas: (c.filas ?? []).map(f => f.map(aTexto).join(' | ')).join('\n'),
     }))),
   };
 }
@@ -82,6 +84,10 @@ function bloqueComponente(c) {
   }
   const cabecera = `<!-- ${[c.tipo, ...op].join('; ')} -->`;
   if (c.tipo === 'imagen') return cabecera;
+  if (c.tipo === 'tabla') {
+    const filas = (c.filas ?? '').split('\n').map(l => l.trim()).filter(Boolean);
+    return [cabecera, ...filas.map(l => `- ${l}`)].join('\n');
+  }
   if (['bullets', 'stats', 'tarjetas'].includes(c.tipo)) return [cabecera, ...lineasItems(c.items ?? [])].join('\n');
   return [cabecera, c.texto ?? ''].join('\n');
 }
@@ -114,7 +120,8 @@ export function aBloque(c) {
 /** componente nuevo del tipo pedido, con un item de ejemplo si lo necesita */
 export function componenteVacio(tipo) {
   const def = COMPONENTES[tipo];
-  const c = { tipo, texto: '', autor: '', src: '', pie: '', items: [] };
+  const c = { tipo, texto: '', autor: '', src: '', pie: '', items: [], filas: '' };
+  if (tipo === 'tabla') c.filas = 'Columna 1 | Columna 2 | Columna 3\nDato | Dato | Dato';
   const lista = def?.campos.find(f => f.tipo === 'lista');
   if (lista) {
     const n = lista.min ?? 1;
