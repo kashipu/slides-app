@@ -28,7 +28,7 @@ for (const t of ['hola **mundo** ya', '**todo**', 'sin nada', '']) {
 
 // --- parser ---
 assert.equal(ir.meta.titulo, 'Plantilla de presentaciones');
-assert.equal(ir.slides.length, 11, 'la plantilla tiene 11 diapositivas');
+assert.equal(ir.slides.length, 13, 'la plantilla tiene 13 diapositivas');
 assert.equal(ir.slides[0].layout, 'cover');
 assert.equal(plain(ir.slides[0].titulo), 'Plantilla de presentaciones');
 assert.equal(plain(ir.slides[1].tag), '01');
@@ -37,8 +37,8 @@ assert.equal(plain(ir.slides[1].tag), '01');
 const layoutsUsados = new Set(ir.slides.map(s => s.layout));
 assert.deepEqual([...LAYOUTS].filter(l => !layoutsUsados.has(l)), [], 'la plantilla usa todos los layouts');
 const tiposUsados = new Set(ir.slides.flatMap(s => s.regiones.flat()).map(c => c.tipo));
-assert.deepEqual(TIPOS.filter(t => !tiposUsados.has(t) && t !== 'imagen'), [],
-  'la plantilla usa todos los componentes salvo `imagen`, que se ve en el layout a sangre');
+assert.deepEqual(TIPOS.filter(t => !tiposUsados.has(t)), [],
+  'la plantilla usa todos los componentes');
 
 // Varios componentes en una región: lo que antes obligaba a inventar un layout.
 const mixtos = ir.slides.filter(s => s.regiones[0].length > 1);
@@ -50,6 +50,19 @@ assert.ok(mixtos.some(s => s.regiones[0].map(c => c.tipo).join('+') === 'stats+p
 const dos = ir.slides.find(s => s.layout === 'dos-columnas');
 assert.equal(dos.regiones.length, 2);
 assert.ok(dos.regiones[0].length && dos.regiones[1].length);
+
+// Un componente recién añadido trae sus filas vacías: tienen que sobrevivir a
+// la ida y vuelta por markdown, o se borran solas mientras se escribe.
+{
+  const recien = '<!-- layout: contenido -->\n# T\n\n<!-- bullets -->\n- \n- \n- ';
+  assert.equal(parse(recien).slides[0].regiones[0][0].items.length, 3,
+    'las filas vacías de una lista no se pierden al releer el markdown');
+
+  const aMedias = '<!-- layout: contenido -->\n# T\n\n<!-- bullets -->\n- \n- algo\n- ';
+  const items = parse(aMedias).slides[0].regiones[0][0].items;
+  assert.equal(items.length, 3, 'escribir en una fila no borra las vecinas vacías');
+  assert.equal(plain(items[1].runs), 'algo');
+}
 
 // --- compatibilidad con el formato anterior ---
 {
@@ -109,6 +122,8 @@ for (const s of ir.slides) {
     if (c.items?.length) c.items = c.items.map((_, i) => ({ runs: runs(`Item ${i + 1}`), extra: runs('Nota'), icono: null }));
     if (tipo === 'parrafo' || tipo === 'cita') c.texto = runs('Un texto de prueba con longitud razonable.');
     if (tipo === 'imagen') c.src = 'decks/img/placeholder.svg';
+    // `tabla` guarda texto en el formulario y celdas en el IR: aquí se pinta el IR
+    if (tipo === 'tabla') c.filas = [['Canal', 'Estado'], ['Portal', 'Vivo']].map(f => f.map(t => runs(t)));
     const r = apilar([c], region, ctx);
     assert.ok(r.alto > 0, `el componente ${tipo} no reporta alto`);
     for (const b of r.boxes) {
@@ -199,7 +214,7 @@ try {
 // --- exportador de Figma: el árbol que viaja al MCP ---
 {
   const a = arbol(md);
-  assert.equal(a.slides.length, 11);
+  assert.equal(a.slides.length, 13);
   assert.equal(a.pagina, 'Plantilla de presentaciones', 'la página toma el título del deck');
   assert.equal(a.fuentes.display, 'Kiffo BDB', 'el nombre de familia en Figma va en mayúsculas, no como en el CSS');
   assert.deepEqual(a.avisos, [], `el árbol de la plantilla no debe avisar:\n${a.avisos.join('\n')}`);
@@ -226,13 +241,14 @@ try {
   const t = ir.slides.map(s => s.layout);
   const orden = doc => parse(doc).slides.map(s => s.layout);
 
-  assert.equal(bloques(md).length, 11);
+  assert.equal(bloques(md).length, 13);
   assert.deepEqual(orden(reconstruir(md, bloques(md))), t, 'reconstruir es idempotente');
   assert.match(reconstruir(md, bloques(md)), /^---\ntitulo:/, 'conserva el frontmatter');
 
-  const movido = moverSlide(md, 10, 1);
-  assert.deepEqual(orden(movido), [t[0], t[10], ...t.slice(1, 10)]);
-  assert.deepEqual(orden(moverSlide(movido, 1, 10)), t, 'mover y devolver deja el orden original');
+  const ult = t.length - 1;
+  const movido = moverSlide(md, ult, 1);
+  assert.deepEqual(orden(movido), [t[0], t[ult], ...t.slice(1, ult)]);
+  assert.deepEqual(orden(moverSlide(movido, 1, ult)), t, 'mover y devolver deja el orden original');
   assert.equal(moverSlide(md, 3, 3), md, 'mover a la misma posición no cambia nada');
   assert.equal(moverSlide(md, 0, 99), md, 'índice fuera de rango no rompe');
 
@@ -240,13 +256,13 @@ try {
   assert.deepEqual(orden(borrarSlide(md, 0)), t.slice(1));
   assert.equal(bloques(borrarSlide('# Único', 0)).length, 1, 'nunca deja el deck vacío');
 
-  for (let i = 0; i < 11; i++) {
+  for (let i = 0; i < t.length; i++) {
     const { ini, fin } = limites(md, inicioSlide(md, i));
     assert.equal(md.slice(ini, fin).trim(), bloques(md)[i], `inicioSlide(${i}) apunta a la diapositiva ${i}`);
   }
 
   const nuevo = reemplazarBloque(md, 1, '<!-- layout: section; tag: 99 -->\n# Otra cosa');
-  assert.equal(bloques(nuevo).length, 11);
+  assert.equal(bloques(nuevo).length, t.length);
   assert.equal(parse(nuevo).slides[1].layout, 'section');
   assert.equal(bloques(nuevo)[0], bloques(md)[0], 'no toca los vecinos');
   assert.equal(reemplazarBloque(md, 99, 'x'), md, 'índice fuera de rango no rompe');
@@ -255,7 +271,7 @@ try {
   assert.ok(!frontmatterTexto(md).includes('---'), 'sin las vallas');
   const cambiado = ponerFrontmatterTexto(md, 'titulo: Otro\nfuente: kiffo');
   assert.equal(parse(cambiado).meta.titulo, 'Otro');
-  assert.equal(bloques(cambiado).length, 11, 'cambiar el frontmatter no toca las diapositivas');
+  assert.equal(bloques(cambiado).length, t.length, 'cambiar el frontmatter no toca las diapositivas');
   assert.equal(finFm(ponerFrontmatterTexto(md, '   ')), 0, 'frontmatter vacío se elimina');
 }
 

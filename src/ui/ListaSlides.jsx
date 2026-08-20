@@ -11,7 +11,7 @@ const ALTO = Math.round(ANCHO * CANVAS.h / CANVAS.w);
  * Los botones ↑ ↓ no son decoración: el drag-and-drop nativo no se maneja con
  * teclado y reordenar tiene que poder hacerse sin ratón.
  */
-export function ListaSlides({ ir, actual, onIr, onMover, onDuplicar, onBorrar }) {
+export function ListaSlides({ ir, actual, onIr, onMover, onDuplicar, onBorrar, soloLectura }) {
   const [sobre, setSobre] = useState(null);
   const tomado = useRef(null);
 
@@ -26,7 +26,7 @@ export function ListaSlides({ ir, actual, onIr, onMover, onDuplicar, onBorrar })
     <ol className="slides">
       {ir.slides.map((s, i) => (
         <li key={i} className={[i === actual ? 'sel' : '', sobre === i ? 'sobre' : ''].filter(Boolean).join(' ')}
-          draggable
+          draggable={!soloLectura}
           onDragStart={e => { tomado.current = i; e.dataTransfer.effectAllowed = 'move'; }}
           onDragOver={e => { e.preventDefault(); setSobre(i); }}
           onDrop={e => { e.preventDefault(); soltar(i); }}
@@ -38,12 +38,14 @@ export function ListaSlides({ ir, actual, onIr, onMover, onDuplicar, onBorrar })
           </button>
           <div className="cab">
             <span className="etiqueta">{s.n} · {s.layout}</span>
-            <span className="acciones">
-              <button title="Subir" disabled={i === 0} onClick={() => onMover(i, i - 1)}>↑</button>
-              <button title="Bajar" disabled={i === ir.slides.length - 1} onClick={() => onMover(i, i + 1)}>↓</button>
-              <button title="Duplicar" onClick={() => onDuplicar(i)}>⧉</button>
-              <button title="Borrar" disabled={ir.slides.length <= 1} onClick={() => onBorrar(i)}>✕</button>
-            </span>
+            {!soloLectura && (
+              <span className="acciones">
+                <button title="Subir" disabled={i === 0} onClick={() => onMover(i, i - 1)}>↑</button>
+                <button title="Bajar" disabled={i === ir.slides.length - 1} onClick={() => onMover(i, i + 1)}>↓</button>
+                <button title="Duplicar" onClick={() => onDuplicar(i)}>⧉</button>
+                <button title="Borrar" disabled={ir.slides.length <= 1} onClick={() => onBorrar(i)}>✕</button>
+              </span>
+            )}
           </div>
         </li>
       ))}

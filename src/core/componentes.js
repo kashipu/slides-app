@@ -84,28 +84,81 @@ const cita = (c, { x, y, w }) => {
 };
 
 const tarjetas = (c, { x, y, w, ctx }) => {
-  const n = Math.min(Math.max(c.items.length, 1), 4);
+  const items = c.items.slice(0, 4);
+  const n = Math.max(items.length, 1);
+  // Con cuatro tarjetas, cuatro columnas dejan una tira de texto ilegible.
+  // En rejilla 2×2 cada una respira, que es como se ven en el diseño.
+  const porFila = n === 4 ? 2 : n;
   const gap = 32;
-  const ancho = (w - gap * (n - 1)) / n;
-  const boxes = [];
-  let fin = y;
-  c.items.slice(0, 4).forEach((it, i) => {
-    const cx = x + i * (ancho + gap);
-    if (it.icono) boxes.push({ kind: 'icon', x: cx + 32, y: y + 32, w: 48, h: 48, src: it.icono, fill: ctx.tinta });
+  const ancho = (w - gap * (porFila - 1)) / porFila;
+  const pos = i => ({ cx: x + (i % porFila) * (ancho + gap), fila: Math.floor(i / porFila) });
+
+  // se mide primero: todas las tarjetas de una fila comparten el alto de la más alta
+  const altos = items.map((it, i) => {
+    const { cx } = pos(i);
     const r = pila(cx + 32, y + (it.icono ? 104 : 32), ancho - 64, [
       { runs: it.runs, style: TYPE.h3 },
       it.extra && { runs: it.extra, style: TYPE.body, gap: 16, extra: { color: T.fgMuted } },
     ]);
-    boxes.push(...r.boxes);
-    fin = Math.max(fin, r.y + 32);
+    return r.y + 32 - y;
   });
-  // la tarjeta se dibuja detrás, ya sabiendo el alto de la más alta
-  const altoCaja = fin - y;
-  const fondos = c.items.slice(0, 4).map((_, i) => ({
-    kind: 'rect', x: x + i * (ancho + gap), y, w: ancho, h: altoCaja,
-    fill: T.bgSubtle, r: 20,
-  }));
-  return { boxes: [...fondos, ...boxes], alto: altoCaja };
+  const filas = Math.ceil(n / porFila);
+  const altoFila = Array.from({ length: filas }, (_, f) =>
+    Math.max(...altos.filter((_, i) => Math.floor(i / porFila) === f), 0));
+  const topeFila = f => y + altoFila.slice(0, f).reduce((a, b) => a + b + gap, 0);
+
+  const fondos = [];
+  const boxes = [];
+  items.forEach((it, i) => {
+    const { cx, fila } = pos(i);
+    const cy = topeFila(fila);
+    fondos.push({ kind: 'rect', x: cx, y: cy, w: ancho, h: altoFila[fila], fill: T.bgSubtle, r: 20 });
+    if (it.icono) boxes.push({ kind: 'icon', x: cx + 32, y: cy + 32, w: 48, h: 48, src: it.icono, fill: ctx.tinta });
+    const r = pila(cx + 32, cy + (it.icono ? 104 : 32), ancho - 64, [
+      { runs: it.runs, style: TYPE.h3 },
+      it.extra && { runs: it.extra, style: TYPE.body, gap: 16, extra: { color: T.fgMuted } },
+    ]);
+    boxes.push(...r.boxes);
+  });
+  return { boxes: [...fondos, ...boxes], alto: topeFila(filas) - y - gap };
+};
+
+// La primera fila es el encabezado: barra de color con texto en blanco. El resto
+// son filas separadas por una línea fina, como la rejilla de cifras del diseño.
+const tabla = (c, { x, y, w, ctx }) => {
+  // `filas` viaja como texto en el formulario y como celdas en el IR; aquí solo
+  // se pinta el IR, así que una tabla a medio escribir no debe reventar el render.
+  const filas = Array.isArray(c.filas) ? c.filas : [];
+  if (!filas.length) return { boxes: [], alto: 0 };
+  const nCols = Math.max(...filas.map(f => f.length));
+  const gap = 16;
+  const ancho = (w - gap * (nCols - 1)) / nCols;
+  const padX = 24;
+  const celda = (runs_, cx, cy, estilo, extra) =>
+    txt(runs_, estilo, cx + padX, cy, ancho - padX * 2, extra);
+
+  const boxes = [];
+  const [cab, ...cuerpo] = filas;
+
+  // encabezado
+  const altoCab = 24 + Math.max(...cab.map(r => alto(plain(r), TYPE.h3, ancho - padX * 2)), 0) + 24;
+  cab.forEach((r, i) => {
+    const cx = x + i * (ancho + gap);
+    boxes.push({ kind: 'rect', x: cx, y, w: ancho, h: altoCab, fill: ctx.tinta, r: 12 });
+    boxes.push(celda(r, cx, y + 24, TYPE.h3, { color: T.fgOnDark }));
+  });
+
+  let cy = y + altoCab + gap;
+  for (const fila of cuerpo) {
+    const altoFila = 20 + Math.max(...fila.map(r => alto(plain(r), TYPE.body, ancho - padX * 2)), 0) + 20;
+    fila.forEach((r, i) => {
+      const cx = x + i * (ancho + gap);
+      boxes.push({ kind: 'rect', x: cx, y: cy, w: ancho, h: altoFila, fill: T.bgSubtle, r: 12 });
+      boxes.push(celda(r, cx, cy + 20, TYPE.body, { color: T.fgDefault }));
+    });
+    cy += altoFila + gap;
+  }
+  return { boxes, alto: cy - gap - y };
 };
 
 const imagen = (c, { x, y, w }) => {
@@ -146,6 +199,11 @@ export const COMPONENTES = {
     label: 'Tarjetas', pintar: tarjetas, gap: 48,
     ayuda: 'De 2 a 4 bloques con título y texto, cada uno con su icono.',
     campos: [{ k: 'items', tipo: 'lista', label: 'Tarjetas', icono: true, pares: ['Título', 'Texto'], min: 2, max: 4 }],
+  },
+  tabla: {
+    label: 'Tabla', pintar: tabla, gap: 48,
+    ayuda: 'La primera fila es el encabezado. Separa las columnas con |',
+    campos: [{ k: 'filas', tipo: 'tabla', label: 'Filas' }],
   },
   imagen: {
     label: 'Imagen', pintar: imagen, gap: 40,

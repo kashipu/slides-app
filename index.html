@@ -34,6 +34,23 @@
            border: 1px solid var(--border-default); background: var(--white);
            color: var(--fg-default); cursor: pointer; max-width: 150px }
 
+  /* Barra de presentaciones: qué deck está abierto */
+  .barra.decks { background: var(--white) }
+  .barra.decks select { flex: 1; max-width: none; font-weight: 500; font-size: 13px }
+
+  /* Catálogo: layouts y componentes disponibles (vista Plantilla) */
+  .catalogo { padding: 12px 16px; overflow: auto; max-height: 42%;
+              border-bottom: 1px solid var(--border-default); background: var(--bg-subtle) }
+  .catalogo p { margin: 0 0 12px; font: 400 12px/1.5 var(--font-body); color: var(--fg-muted) }
+  .catalogo label { display: block; font: 600 10px/1 var(--font-body); letter-spacing: .06em;
+                    text-transform: uppercase; color: var(--fg-accent); margin: 12px 0 6px }
+  .catalogo ul { list-style: none; margin: 0; padding: 0; display: flex;
+                 flex-direction: column; gap: 4px }
+  .catalogo li { padding: 6px 8px; background: var(--white); border-radius: var(--r-sm);
+                 font: 400 12px/1.4 var(--font-body); color: var(--fg-default) }
+  .catalogo code { font: 11px/1 ui-monospace, Menlo, monospace; color: var(--fg-muted) }
+  .catalogo li span { display: block; margin-top: 2px; font-size: 11px; color: var(--fg-disabled) }
+
   /* Picker de iconos */
   .modal { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 10;
            display: grid; place-items: center; padding: 40px }
@@ -75,6 +92,9 @@
 
   .tira { width: 172px; flex: 0 0 auto; overflow: auto; background: var(--bg-muted);
           border-right: 1px solid var(--border-default) }
+  /* Sin formulario al lado (vista Plantilla) la tira ocupa el panel entero */
+  .tira.ancha { width: auto; flex: 1; border-right: 0 }
+  .tira.ancha ol.slides { flex-direction: row; flex-wrap: wrap }
   ol.slides { list-style: none; margin: 0; padding: 10px; display: flex;
               flex-direction: column; gap: 8px }
   ol.slides li { background: var(--white); border-radius: var(--r-sm);
@@ -129,6 +149,10 @@
   .comp-tipo { font: 600 10px/1 var(--font-body); letter-spacing: .05em;
                text-transform: uppercase; color: var(--fg-accent) }
   .anadir.comp { align-self: stretch; border-style: dashed; color: var(--fg-muted) }
+  .nota-especial { margin: 0; padding: 10px 12px; background: var(--bg-subtle);
+                   border-radius: var(--r-sm); border: 1px dashed var(--border-default);
+                   font: 400 12px/1.5 var(--font-body); color: var(--fg-muted) }
+  .nota-especial b { color: var(--fg-default) }
   .menu-comp { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px;
                background: var(--bg-subtle); border-radius: var(--r-sm) }
   .menu-comp button { padding: 6px 10px; font-size: 11px }

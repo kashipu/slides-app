@@ -37,7 +37,7 @@ El layout decide **dónde** va el contenido. Tú eliges qué componentes meter d
 - 189 | Tokens verificados
 - 532 | Iconos disponibles
 - 6 | Componentes
-- 8 | Layouts
+- 7 | Layouts
 
 <!-- parrafo -->
 Aquí conviven cifras y párrafo en la misma región, sin inventar un layout nuevo para la combinación.
@@ -64,6 +64,29 @@ El layout pone las regiones y tú metes los componentes que hagan falta, en el o
 - [naturaleza/arbol] Sostenible | El sistema crece sin multiplicar layouts.
 - [personas/usuarios] Compartido | Diseño y desarrollo leen el mismo catálogo.
 - [dispositivos/mobile-phone] Portátil | El mismo deck sale a cuatro destinos.
+
+---
+
+<!-- layout: contenido; tag: Tabla -->
+# Comparar en ==columnas==
+
+<!-- tabla -->
+- Componente | Para qué sirve | Cuántos
+- Tabla | Comparar cosas en columnas | Filas libres
+- Tarjetas | Bloques con título y texto | De 2 a 4
+- Cifras | Números clave | De 2 a 4
+
+---
+
+<!-- layout: dos-columnas; tag: Imagen -->
+# Una imagen dentro de la región
+
+<!-- imagen; src: decks/img/placeholder.svg; pie: La imagen se recorta a 16:9 y se mide sola -->
+
+<!-- columna -->
+
+<!-- parrafo -->
+El componente `imagen` vive dentro de una región y convive con los demás. El layout `imagen` es otra cosa: ocupa la diapositiva entera.
 
 ---
 
