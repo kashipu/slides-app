@@ -2,16 +2,10 @@
 
 Genera presentaciones on-brand y las exporta a **PDF**, **HTML autocontenido**, **Figma Design** y (pendiente) **PPTX editable**, usando el design system Sherpa de `base/`. Se editan con formulario; el `.md` es el formato de almacenamiento y la fuente de verdad.
 
-## Índice
+## Documentación
 
-| Doc | Qué contiene |
-|---|---|
-| [../design.md](../design.md) | **El sistema de diseño**: color, tipografía, retícula, catálogos y reglas de marca |
-| Este archivo | Arquitectura, decisiones, stack y cómo se corre |
-| [01-formato-deck.md](01-formato-deck.md) | Cómo se escribe un deck y el catálogo de layouts |
-| [02-design-system-slides.md](02-design-system-slides.md) | Canvas, retícula, escala tipográfica de slides y uso de assets |
-| [03-exportadores.md](03-exportadores.md) | Los cuatro exportadores: PDF, HTML, Figma y PPTX |
-| [04-roadmap.md](04-roadmap.md) | Fases de implementación y qué se deja fuera |
+Empieza en [00-indice.md](00-indice.md). Es el mapa de autoridad, dependencias y
+orden de ejecución de todos los documentos del proyecto.
 
 ---
 
