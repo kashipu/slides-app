@@ -71,6 +71,154 @@ consistencia, pero no tiene suficiente conocimiento para decidir:
 Por eso el siguiente salto no es agregar layouts genéricos. Es convertir el
 design system en un sistema editorial que la IA pueda consultar y obedecer.
 
+## Fase A — Intervención visual inmediata del runtime (prioridad 0)
+
+Estado: **pendiente de ejecución** · prioridad fijada el 20 de agosto de 2026.
+
+### Decisión de prioridades
+
+Los exportadores salen de la ruta crítica. El exportador de Figma ya lleva la
+composición con fidelidad y eso cubre la necesidad actual; PPTX se pospone y no
+condiciona ninguna puerta de calidad de las fases siguientes. Hasta nuevo aviso,
+la prueba de exportación de los decks se limita a **HTML, PDF y Figma**.
+
+Lo que bloquea el producto hoy es otra cosa: el runtime solo sabe producir
+slides genéricas. Esta fase interviene el código existente para subir el piso
+visual **antes** de curar corpus o construir las 16 composiciones. No las
+sustituye: les da un runtime capaz de expresarlas.
+
+### Diagnóstico preciso (verificado en el código, no opinión)
+
+1. **Una sola cabecera para todo.** Todos los layouts con regiones pintan el
+   mismo encabezado `tag` 24 px + título `h2` 64 px (`cabecera()` en
+   `src/core/layouts.js`). No hay silueta distinguible entre slides.
+2. **Estética de dashboard en `tarjetas` y `tabla`.** Ambos componentes pintan
+   rectángulos de fondo (`bgSubtle`) con radios por cada tarjeta y por cada
+   celda (`src/core/componentes.js`). Es exactamente el anti-patrón que este
+   plan rechaza: «exceso de cajas, pills, bordes… estética de dashboard».
+3. **Cifras sin protagonismo.** `stats` pinta todo a 96 px teñido del acento,
+   sin variante de cifra dominante. No existe el `kpi-hero` del catálogo.
+4. **Cero asimetría.** Las regiones son 12 columnas o 6+6 simétricas. No hay
+   composición 8+4 ni layout con medio lateral dominante.
+5. **Ningún layout da al medio 45–75 % del lienzo con zona de texto prevista.**
+   `imagen` a sangre existe, pero sin región de texto lateral; el componente
+   `imagen` queda subordinado a la pila de texto.
+6. **La escala tipográfica termina en 120 px** (`TYPE` en
+   `src/core/geometria.js`). No existen el titular de afirmación ni la cifra
+   protagonista; el resultado es texto casi al cien por cien y al mismo tamaño.
+
+### Orden de trabajo para el agente ejecutor
+
+Reglas globales, obligatorias durante toda la fase:
+
+- Trabajar sobre la rama designada y correr `node test.js` tras cada tarea; la
+  fase termina con el test verde y `decks/plantilla.md` con **0 avisos**.
+- No introducir tipos de caja nuevos: solo `text`, `rect`, `svg`, `icon`,
+  `image`. Son los que `src/ui/Deck.jsx`, `src/export/html.jsx` y
+  `tools/figma/render-slides.js` saben dibujar; un kind nuevo obligaría a tocar
+  los tres y no hace falta para nada de lo que sigue.
+- Solo tokens de `src/core/tokens.js`; espaciados y radios dentro de las
+  escalas de `design.md`; sin gradientes de fondo ni sombras nuevas.
+- No romper la compatibilidad del formato: los `ALIAS` de `src/core/parse.js`
+  y los decks existentes deben seguir abriendo sin avisos.
+- Los filetes (reglas finas) se pintan como `rect` de 2–4 px de alto sin radio.
+
+**Tarea 1 — Escala tipográfica editorial** (`src/core/geometria.js`)
+
+Añadir a `TYPE` tres estilos; no tocar `AVG` (indexa por familia, no por
+estilo):
+
+- `displayXL: { size: 160, font: 'display', weight: 500, lh: 1.05 }` — titular
+  de afirmación y portada.
+- `statHero: { size: 240, font: 'display', weight: 600, lh: 1.0 }` — cifra
+  protagonista.
+- `numero: { size: 200, font: 'display', weight: 300, lh: 1.0 }` — número
+  gigante de sección.
+
+Subir `quote` de 56 a 64 px (sigue en peso 300). Documentar los tres estilos en
+la tabla «Escala de diapositiva» de `design.md` — la escala derivada admite
+pasos nuevos, la de producto no se toca.
+
+**Tarea 2 — Matar el dashboard en los componentes** (`src/core/componentes.js`)
+
+- `tarjetas` → columnas editoriales: eliminar los `rect` de fondo. Por item:
+  filete superior de 3 px en `ctx.tinta` al ancho de la columna, icono 48 px si
+  lo hay, título `h3`, texto `body` en `fgMuted`. De 2 a 4 items en **una sola
+  fila** de columnas iguales con canal 32; sin fondos, el aire separa.
+- `tabla` → tabla editorial: eliminar los `rect` por celda. Encabezado en
+  `body` 28 px peso 500 y `fgDefault`, con **una** regla de 3 px en `ctx.tinta`
+  bajo toda la fila. Filas separadas por filete de 1 px `#E6E6E6` (carbon-200,
+  el token de borde). Padding vertical 20. Alineación: primera columna a la
+  izquierda; toda celda cuyo texto plano empiece por dígito, `+`, `-` o `$` se
+  alinea a la derecha. La jerarquía la dan alineación y peso, no fondos.
+- `stats`: el valor pasa a `fgDefault` (negro), con filete superior de 2 px en
+  `ctx.tinta` y etiqueta en `caption` `fgMuted`. **Con un solo item** el valor
+  se pinta en `statHero` (240 px) y la etiqueta en `bodyL`: ese es el
+  `kpi-hero` del catálogo, sin layout nuevo.
+- `cita`: texto en `quote` (ya a 64 px por la tarea 1) con barra vertical de
+  8 px en `ctx.tinta` a la izquierda y el texto sangrado 48 px; autor en estilo
+  `tag` y `fgMuted`.
+
+**Tarea 3 — Layouts con silueta** (`src/core/layouts.js`)
+
+Cambio de soporte: permitir que un layout no-especial declare `fijas(s, ctx)`
+(cajas pintadas antes de las regiones) y `cabeceraW` (ancho de la cabecera,
+por defecto `cols(10)`). Son ~6 líneas en `componer()` y `cabecera()`.
+
+Layouts nuevos:
+
+- `afirmacion` (especial, fondo blanco): tag en (112, 96) `fgAccent`; título en
+  `displayXL` en x=112, y=380, ancho `cols(11)`; apoyo opcional `bodyL`
+  `fgMuted` en (112, 880), ancho `cols(7)`. El espacio negativo es el punto:
+  nada más en el lienzo.
+- `dos-tercios` (cabecera, fondo blanco): regiones
+  `[{x: 112, y: 340, w: cols(8)}, {x: 112 + cols(8) + 32, y: 340, w: cols(4)}]`.
+  La asimetría 8+4 es la variedad que hoy no existe.
+- `media-lateral` (cabecera con `cabeceraW: cols(5)`, fondo blanco): `fijas`
+  pinta `s.imagen` a sangre en `{x: 832, y: 0, w: 1088, h: 1080, fit: 'cover'}`
+  — 57 % del lienzo, dentro del rango 45–75 % que exige este plan — y una
+  región de texto en `{x: 112, y: 340, w: cols(5)}`.
+
+Layouts rediseñados:
+
+- `section`: el tag se pinta como número gigante en `numero` (200 px) y
+  `brandYellow` en (112, 300); el título en `h1` blanco en (112, 560), ancho
+  `cols(10)`.
+- `cover`: filete `brandYellow` de 8 px y 160 de ancho en (112, 540); título
+  `display` en y=580; subtítulo `bodyL` en y=880; fecha `caption` en y=980.
+  Verificar que con título a dos líneas nada pase de y=1080 − 96.
+
+**Tarea 4 — Cablear formulario, barra y plantilla**
+
+- `src/ui/campos.js` → `CAMPOS_SLIDE`: `afirmacion` (tag, titulo, body),
+  `dos-tercios` = alias de `contenido`, `media-lateral` = cabecera + campo
+  `imagen`.
+- `src/ui/md.js` → `ESQUELETOS`: un esqueleto por layout nuevo, con contenido
+  de ejemplo real (no lorem).
+- `decks/plantilla.md`: añadir slides que ejerciten `afirmacion`,
+  `dos-tercios`, `media-lateral` y el `kpi-hero` (stats de un solo item),
+  manteniendo 0 avisos. El test exige que la plantilla use **todos** los
+  layouts y componentes: fallará hasta que esto esté hecho.
+- `test.js`: actualizar los conteos de slides (aparece dos veces: parser y
+  árbol de Figma) y cualquier aserción de composición afectada. No relajar la
+  comprobación de que ninguna caja se sale del canvas.
+- Documentación: actualizar las tablas de layouts en `design.md`,
+  `docs/01-formato-deck.md` y `docs/02-design-system-slides.md`, y marcar esta
+  fase en `docs/04-roadmap.md`.
+
+### Puerta de salida de la Fase A
+
+- `node test.js` verde; plantilla con 0 avisos; ninguna caja fuera del canvas.
+- `tarjetas` y `tabla` no emiten ningún `rect` de relleno — solo filetes de
+  hasta 4 px.
+- Un `stats` de un item pinta su valor a 240 px.
+- La plantilla, vista como tira de miniaturas en la aplicación, cumple: no hay
+  dos slides adyacentes con la misma silueta; al menos una slide tiene un medio
+  ocupando ≥45 % del lienzo; al menos una slide es tipografía dominante con
+  espacio negativo (`afirmacion`).
+- Revisión visual humana de las miniaturas contra los fallos críticos de este
+  plan antes de dar la fase por cerrada.
+
 ## Principios no negociables
 
 1. **Una slide, una idea dominante.** El título declara el punto y la
@@ -522,7 +670,9 @@ Cada deck se revisa de cuatro formas:
 1. **Prueba de tres segundos:** se entiende el punto dominante.
 2. **Prueba de miniatura:** la silueta funciona y el ritmo es visible.
 3. **Prueba de sala:** texto, tablas y screenshots siguen siendo legibles.
-4. **Prueba de exportación:** HTML, PDF, Figma y PPTX conservan jerarquía.
+4. **Prueba de exportación:** HTML, PDF y Figma conservan jerarquía. PPTX se
+   incorpora a esta prueba solo cuando exista su exportador; no bloquea
+   ninguna puerta (decisión de prioridades de la Fase A).
 
 ## Gobierno del catálogo
 
@@ -570,7 +720,8 @@ la razón. Esa señal decide dónde ampliar el sistema.
 ## Secuencia crítica
 
 ```text
-barra visual
+intervención visual del runtime (Fase A)
+  → barra visual
   → corpus curado
   → macrotema y registros
   → 16 composiciones
@@ -588,7 +739,11 @@ un repertorio visual mediocre solo produciría resultados mediocres más rápido
 
 ## Próximo entregable
 
-El siguiente entregable es visual, no técnico:
+El siguiente entregable es la **Fase A ejecutada**: el orden de trabajo de la
+sección «Fase A — Intervención visual inmediata del runtime», con su puerta de
+salida cumplida. Cualquier agente que retome este plan empieza por ahí.
+
+Después de la Fase A, el entregable vuelve a ser visual, no técnico:
 
 1. contact sheets de las fuentes prioritarias del corpus;
 2. selección y puntuación de las primeras 100 referencias;
