@@ -131,6 +131,14 @@ Ejemplos:
 
 ## Siguiente acción
 
-Ejecutar la fase 1 del plan visual: producir contact sheets homogéneas, puntuar
-las primeras 100 referencias y seleccionar las 20–30 composiciones que merecen
-ser reinterpretadas dentro de Sherpa.
+Ejecutar la **Fase A** del plan rector
+([06-plan-producto-premium.md](06-plan-producto-premium.md), sección
+«Fase A — Intervención visual inmediata del runtime»): subir el piso visual del
+runtime actual — tipografía editorial, componentes sin estética de dashboard,
+layouts con silueta y medio dominante — con instrucciones precisas por archivo
+y puerta de salida comprobable. Los exportadores quedan fuera de la ruta
+crítica; Figma ya cubre la necesidad actual.
+
+Después de la Fase A: producir contact sheets homogéneas, puntuar las primeras
+100 referencias y seleccionar las 20–30 composiciones que merecen ser
+reinterpretadas dentro de Sherpa.
