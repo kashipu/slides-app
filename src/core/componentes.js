@@ -58,16 +58,25 @@ const bullets = (c, { x, y, w, ctx }) => {
   return { boxes, alto: Math.max(0, cy - y - (conIcono ? 40 : 32)) };
 };
 
+// Con un solo item la cifra es un kpi-hero: statHero (240px) en vez de stat.
 const stats = (c, { x, y, w, ctx }) => {
   const n = Math.min(c.items.length, 4) || 1;
+  const hero = n === 1;
   const gap = 48;
   const ancho = (w - gap * (n - 1)) / n;
   const boxes = [];
   let fin = y;
   c.items.slice(0, 4).forEach((it, i) => {
-    const r = pila(x + i * (ancho + gap), y, ancho, [
-      { runs: it.runs, style: TYPE.stat, extra: { color: ctx.tinta } },
-      it.extra && { runs: it.extra, style: TYPE.caption, gap: 16, extra: { color: T.fgMuted, size: 24 } },
+    const cx = x + i * (ancho + gap);
+    boxes.push({ kind: 'rect', x: cx, y, w: ancho, h: 2, fill: ctx.tinta });
+    const r = pila(cx, y + 2 + (hero ? 24 : 16), ancho, [
+      { runs: it.runs, style: hero ? TYPE.statHero : TYPE.stat, extra: { color: T.fgDefault } },
+      it.extra && {
+        runs: it.extra,
+        style: hero ? TYPE.bodyL : TYPE.caption,
+        gap: hero ? 24 : 16,
+        extra: hero ? { color: T.fgMuted } : { color: T.fgMuted, size: 24 },
+      },
     ]);
     boxes.push(...r.boxes);
     fin = Math.max(fin, r.y);
@@ -75,56 +84,51 @@ const stats = (c, { x, y, w, ctx }) => {
   return { boxes, alto: fin - y };
 };
 
-const cita = (c, { x, y, w }) => {
-  const r = pila(x, y, w, [
+// Barra vertical en el acento del slide, en vez de comillas o fondo.
+const cita = (c, { x, y, w, ctx }) => {
+  const sangria = 48;
+  const r = pila(x + sangria, y, w - sangria, [
     { runs: c.texto, style: TYPE.quote },
-    c.autor && { runs: c.autor, style: TYPE.caption, gap: 40, extra: { color: T.fgMuted, size: 24 } },
+    c.autor && { runs: c.autor, style: TYPE.tag, gap: 40, extra: { color: T.fgMuted } },
   ]);
-  return { boxes: r.boxes, alto: r.y - y };
+  const barra = { kind: 'rect', x, y, w: 8, h: r.y - y, fill: ctx.tinta };
+  return { boxes: [barra, ...r.boxes], alto: r.y - y };
 };
 
+// Columnas editoriales, no tarjetas: filete de acento arriba, aire en vez de
+// fondo. Siempre en una sola fila — con el fondo fuera, no hace falta igualar
+// alturas por fila.
 const tarjetas = (c, { x, y, w, ctx }) => {
   const items = c.items.slice(0, 4);
   const n = Math.max(items.length, 1);
-  // Con cuatro tarjetas, cuatro columnas dejan una tira de texto ilegible.
-  // En rejilla 2×2 cada una respira, que es como se ven en el diseño.
-  const porFila = n === 4 ? 2 : n;
   const gap = 32;
-  const ancho = (w - gap * (porFila - 1)) / porFila;
-  const pos = i => ({ cx: x + (i % porFila) * (ancho + gap), fila: Math.floor(i / porFila) });
-
-  // se mide primero: todas las tarjetas de una fila comparten el alto de la más alta
-  const altos = items.map((it, i) => {
-    const { cx } = pos(i);
-    const r = pila(cx + 32, y + (it.icono ? 104 : 32), ancho - 64, [
-      { runs: it.runs, style: TYPE.h3 },
-      it.extra && { runs: it.extra, style: TYPE.body, gap: 16, extra: { color: T.fgMuted } },
-    ]);
-    return r.y + 32 - y;
-  });
-  const filas = Math.ceil(n / porFila);
-  const altoFila = Array.from({ length: filas }, (_, f) =>
-    Math.max(...altos.filter((_, i) => Math.floor(i / porFila) === f), 0));
-  const topeFila = f => y + altoFila.slice(0, f).reduce((a, b) => a + b + gap, 0);
-
-  const fondos = [];
+  const ancho = (w - gap * (n - 1)) / n;
   const boxes = [];
+  let fin = y;
   items.forEach((it, i) => {
-    const { cx, fila } = pos(i);
-    const cy = topeFila(fila);
-    fondos.push({ kind: 'rect', x: cx, y: cy, w: ancho, h: altoFila[fila], fill: T.bgSubtle, r: 20 });
-    if (it.icono) boxes.push({ kind: 'icon', x: cx + 32, y: cy + 32, w: 48, h: 48, src: it.icono, fill: ctx.tinta });
-    const r = pila(cx + 32, cy + (it.icono ? 104 : 32), ancho - 64, [
+    const cx = x + i * (ancho + gap);
+    boxes.push({ kind: 'rect', x: cx, y, w: ancho, h: 3, fill: ctx.tinta });
+    let cy = y + 3 + 32;
+    if (it.icono) {
+      boxes.push({ kind: 'icon', x: cx, y: cy, w: 48, h: 48, src: it.icono, fill: ctx.tinta });
+      cy += 48 + 24;
+    }
+    const r = pila(cx, cy, ancho, [
       { runs: it.runs, style: TYPE.h3 },
       it.extra && { runs: it.extra, style: TYPE.body, gap: 16, extra: { color: T.fgMuted } },
     ]);
     boxes.push(...r.boxes);
+    fin = Math.max(fin, r.y);
   });
-  return { boxes: [...fondos, ...boxes], alto: topeFila(filas) - y - gap };
+  return { boxes, alto: fin - y };
 };
 
-// La primera fila es el encabezado: barra de color con texto en blanco. El resto
-// son filas separadas por una línea fina, como la rejilla de cifras del diseño.
+// Alinea a la derecha una celda que empieza en dígito, +, - o $ — así una cifra
+// no queda pegada al texto de la columna anterior sin depender de un fondo.
+const ALINEA_DERECHA = /^[\d+\-$]/;
+
+// Tabla editorial: sin fondos por celda. Una regla de 3px bajo el encabezado y
+// un filete de 1px bajo cada fila — la jerarquía la dan alineación y peso.
 const tabla = (c, { x, y, w, ctx }) => {
   // `filas` viaja como texto en el formulario y como celdas en el IR; aquí solo
   // se pinta el IR, así que una tabla a medio escribir no debe reventar el render.
@@ -134,31 +138,27 @@ const tabla = (c, { x, y, w, ctx }) => {
   const gap = 16;
   const ancho = (w - gap * (nCols - 1)) / nCols;
   const padX = 24;
-  const celda = (runs_, cx, cy, estilo, extra) =>
-    txt(runs_, estilo, cx + padX, cy, ancho - padX * 2, extra);
+  const estiloCab = { ...TYPE.body, weight: 500 };
+  const alinea = (runs_, i) => (i > 0 && ALINEA_DERECHA.test(plain(runs_))) ? 'right' : 'left';
+  const celda = (runs_, cx, cy, estilo, i) =>
+    txt(runs_, estilo, cx + padX, cy, ancho - padX * 2, { color: T.fgDefault, align: alinea(runs_, i) });
 
   const boxes = [];
   const [cab, ...cuerpo] = filas;
 
-  // encabezado
-  const altoCab = 24 + Math.max(...cab.map(r => alto(plain(r), TYPE.h3, ancho - padX * 2)), 0) + 24;
-  cab.forEach((r, i) => {
-    const cx = x + i * (ancho + gap);
-    boxes.push({ kind: 'rect', x: cx, y, w: ancho, h: altoCab, fill: ctx.tinta, r: 12 });
-    boxes.push(celda(r, cx, y + 24, TYPE.h3, { color: T.fgOnDark }));
-  });
+  const altoCab = 20 + Math.max(...cab.map(r => alto(plain(r), estiloCab, ancho - padX * 2)), 0) + 20;
+  cab.forEach((r, i) => boxes.push(celda(r, x + i * (ancho + gap), y + 20, estiloCab, i)));
+  boxes.push({ kind: 'rect', x, y: y + altoCab, w, h: 3, fill: ctx.tinta });
 
-  let cy = y + altoCab + gap;
+  let cy = y + altoCab + 3;
   for (const fila of cuerpo) {
     const altoFila = 20 + Math.max(...fila.map(r => alto(plain(r), TYPE.body, ancho - padX * 2)), 0) + 20;
-    fila.forEach((r, i) => {
-      const cx = x + i * (ancho + gap);
-      boxes.push({ kind: 'rect', x: cx, y: cy, w: ancho, h: altoFila, fill: T.bgSubtle, r: 12 });
-      boxes.push(celda(r, cx, cy + 20, TYPE.body, { color: T.fgDefault }));
-    });
-    cy += altoFila + gap;
+    fila.forEach((r, i) => boxes.push(celda(r, x + i * (ancho + gap), cy + 20, TYPE.body, i)));
+    cy += altoFila;
+    boxes.push({ kind: 'rect', x, y: cy, w, h: 1, fill: T.borderDefault });
+    cy += 1;
   }
-  return { boxes, alto: cy - gap - y };
+  return { boxes, alto: cy - y };
 };
 
 const imagen = (c, { x, y, w }) => {
